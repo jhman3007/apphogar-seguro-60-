@@ -628,7 +628,7 @@
       cursor: pointer;
     }
 
-    /* MODO CONFIGURACIÓN DINÁMICA DE LA FAMILIA */
+    /* MODO CONFIGURACIÓN DINÁMICA */
     .config-form {
       display: flex;
       flex-direction: column;
@@ -773,8 +773,6 @@
           </div>
 
           <div class="sensor-list">
-            
-            <!-- RADAR DE CAÍDAS MMWAVE -->
             <div class="sensor-card">
               <div class="sensor-icon-wrapper" style="background: #EFF6FF; color: #2563EB;">📡</div>
               <div class="sensor-info">
@@ -784,7 +782,6 @@
               <span class="badge badge-success" id="fall-badge">OK</span>
             </div>
 
-            <!-- APERTURA DE REFRIGERADOR (RUTINA ALIMENTARIA) -->
             <div class="sensor-card">
               <div class="sensor-icon-wrapper" style="background: #FEF3C7; color: #D97706;">🧊</div>
               <div class="sensor-info">
@@ -794,7 +791,6 @@
               <span class="badge badge-success">Rutina OK</span>
             </div>
 
-            <!-- SENSOR PUERTA PRINCIPAL -->
             <div class="sensor-card">
               <div class="sensor-icon-wrapper" style="background: #F3E8FF; color: #9333EA;">🚪</div>
               <div class="sensor-info">
@@ -804,7 +800,6 @@
               <span class="badge badge-success" id="door-badge">Cerrada</span>
             </div>
 
-            <!-- DETECTOR DE FUGA DE AGUA / GAS -->
             <div class="sensor-card">
               <div class="sensor-icon-wrapper" style="background: #ECFDF5; color: #059669;">💧</div>
               <div class="sensor-info">
@@ -814,7 +809,6 @@
               <span class="badge badge-success" id="water-badge">OK</span>
             </div>
 
-            <!-- SENSOR DE HUMO -->
             <div class="sensor-card">
               <div class="sensor-icon-wrapper" style="background: #FEF2F2; color: #DC2626;">🔥</div>
               <div class="sensor-info">
@@ -823,10 +817,9 @@
               </div>
               <span class="badge badge-success" id="smoke-badge">OK</span>
             </div>
-
           </div>
 
-          <!-- CÁMARA DE SEGURIDAD INTERACTIVA -->
+          <!-- CÁMARA EN VIVO -->
           <div class="section-title">
             <span>Cámara en Vivo</span>
             <span style="font-size: 11px; color: var(--text-muted);" id="cam-location-label">LIVING PRINCIPAL</span>
@@ -846,23 +839,72 @@
 
         </section>
 
+        <!-- ================= VISTA RED DE APOYO & CONTACTOS ================= -->
+        <section class="view-panel" id="panel-network">
+          <div class="section-title">
+            <span>Red de Apoyo & Contactos</span>
+          </div>
+
+          <div class="sensor-list">
+            <!-- FAMILIAR 1 -->
+            <div class="sensor-card">
+              <div class="sensor-icon-wrapper" style="background: #EFF6FF; color: #2563EB;">👩‍👧</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Hija (Carolina)</div>
+                <div class="sensor-desc">+56 9 8765 4321 · Familiar Principal</div>
+              </div>
+              <button class="btn-check-med btn-call-contact" data-name="Hija (Carolina)" style="padding: 8px 12px; font-size: 12px;">📞 Llamar</button>
+            </div>
+
+            <!-- FAMILIAR 2 / VECINO -->
+            <div class="sensor-card">
+              <div class="sensor-icon-wrapper" style="background: #ECFDF5; color: #059669;">🏠</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Vecino (Don Pedro)</div>
+                <div class="sensor-desc">+56 9 1234 5678 · Contacto de Proximidad</div>
+              </div>
+              <button class="btn-check-med btn-call-contact" data-name="Vecino (Don Pedro)" style="padding: 8px 12px; font-size: 12px; background: #059669;">📞 Llamar</button>
+            </div>
+
+            <!-- MÉDICO -->
+            <div class="sensor-card">
+              <div class="sensor-icon-wrapper" style="background: #F3E8FF; color: #9333EA;">🩺</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Dr. Roberto Soto</div>
+                <div class="sensor-desc">Centro Médico Peñalolén · Cabecera</div>
+              </div>
+              <button class="btn-check-med btn-call-contact" data-name="Dr. Roberto Soto" style="padding: 8px 12px; font-size: 12px; background: #9333EA;">📞 Llamar</button>
+            </div>
+
+            <!-- CUIDADOR -->
+            <div class="sensor-card">
+              <div class="sensor-icon-wrapper" style="background: #FEF3C7; color: #D97706;">🧑‍⚕️</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Cuidador (Ana María)</div>
+                <div class="sensor-desc">+56 9 4433 2211 · Turno Mañana</div>
+              </div>
+              <button class="btn-check-med btn-call-contact" data-name="Cuidador (Ana María)" style="padding: 8px 12px; font-size: 12px; background: #D97706;">📞 Llamar</button>
+            </div>
+          </div>
+        </section>
+
       </main>
 
       <!-- BARRA DE NAVEGACIÓN INFERIOR DE LA APP -->
       <nav class="nav-bar">
-        <button class="nav-item active">
+        <button class="nav-item active" id="nav-btn-home">
           <icon>🏠</icon>
           Inicio
         </button>
-        <button class="nav-item">
+        <button class="nav-item" id="nav-btn-health">
           <icon>💊</icon>
           Salud
         </button>
-        <button class="nav-item">
+        <button class="nav-item" id="nav-btn-cams">
           <icon>🎥</icon>
           Cámaras
         </button>
-        <button class="nav-item">
+        <button class="nav-item" id="nav-btn-network">
           <icon>👥</icon>
           Red
         </button>
@@ -891,7 +933,7 @@
         </div>
       </div>
 
-      <!-- MODAL CONFIGURACIÓN DATO FAMILIAR -->
+      <!-- MODAL CONFIGURACIÓN CON GUARDADO REAL -->
       <div class="modal-overlay" id="modal-config">
         <div class="modal-card">
           <h3 style="font-size: 16px; margin-bottom: 12px; text-align: left;">Configurar Adulto Mayor</h3>
@@ -918,7 +960,7 @@
 
     </div>
 
-    <!-- PANEL FLOTANTE - SIMULADOR DE EVENTOS IOT (DEMO TÉCNICA) -->
+    <!-- PANEL FLOTANTE - SIMULADOR DE EVENTOS IOT -->
     <div class="iot-simulator">
       <div class="sim-header">
         <div class="sim-title">
@@ -956,40 +998,82 @@
 
   </div>
 
-  <!-- SCRIPT CON TODA LA LÓGICA DE NAVEGACIÓN, EVENTOS Y SIMULADOR -->
+  <!-- SCRIPT CON LÓGICA DE NAVEGACIÓN, RED DE APOYO Y PERSISTENCIA (LOCALSTORAGE) -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-      let appData = {
+      // CARGAR DATOS GUARDADOS PREVIAMENTE (SI EXISTEN)
+      let savedData = JSON.parse(localStorage.getItem('hogarSeguroConfig')) || {
         seniorName: "Sra. Marta",
         age: 82,
-        location: "Peñalolén, Santiago",
-        medications: [
-          { id: 1, name: "Losartán 50mg", time: "12:00 PM", taken: false }
-        ]
+        location: "Peñalolén, Santiago"
       };
 
-      // NAVEGACIÓN ENTRE ROLES
+      // Aplicar datos cargados en pantalla
+      document.getElementById('display-senior-name').innerText = `${savedData.seniorName} (${savedData.age} años)`;
+      document.getElementById('display-senior-location').innerText = savedData.location;
+      document.getElementById('cfg-name').value = savedData.seniorName;
+      document.getElementById('cfg-age').value = savedData.age;
+      document.getElementById('cfg-location').value = savedData.location;
+
+      // NAVEGACIÓN ENTRE ROLES (Senior / Familia)
       const btnRoleSenior = document.getElementById('btn-role-senior');
       const btnRoleFamily = document.getElementById('btn-role-family');
       const panelSenior = document.getElementById('panel-senior');
       const panelFamily = document.getElementById('panel-family');
+      const panelNetwork = document.getElementById('panel-network');
+
+      function switchPanel(targetPanel) {
+        panelSenior.classList.remove('active');
+        panelFamily.classList.remove('active');
+        panelNetwork.classList.remove('active');
+        targetPanel.classList.add('active');
+      }
 
       btnRoleSenior.addEventListener('click', () => {
         btnRoleSenior.classList.add('active');
         btnRoleFamily.classList.remove('active');
-        panelSenior.classList.add('active');
-        panelFamily.classList.remove('active');
+        switchPanel(panelSenior);
       });
 
       btnRoleFamily.addEventListener('click', () => {
         btnRoleFamily.classList.add('active');
         btnRoleSenior.classList.remove('active');
-        panelFamily.classList.add('active');
-        panelSenior.classList.remove('active');
+        switchPanel(panelFamily);
       });
 
-      // BOTÓN ESTOY BIEN (REPORTE DE TRANQUILIDAD)
+      // NAVEGACIÓN INFERIOR (Barra de botones)
+      const navBtnHome = document.getElementById('nav-btn-home');
+      const navBtnHealth = document.getElementById('nav-btn-health');
+      const navBtnCams = document.getElementById('nav-btn-cams');
+      const navBtnNetwork = document.getElementById('nav-btn-network');
+
+      function setActiveNav(btn) {
+        [navBtnHome, navBtnHealth, navBtnCams, navBtnNetwork].forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+
+      navBtnHome.addEventListener('click', () => {
+        setActiveNav(navBtnHome);
+        switchPanel(panelSenior);
+      });
+
+      navBtnHealth.addEventListener('click', () => {
+        setActiveNav(navBtnHealth);
+        switchPanel(panelSenior); // O panel de salud específico
+      });
+
+      navBtnCams.addEventListener('click', () => {
+        setActiveNav(navBtnCams);
+        btnRoleFamily.click(); // Cambia a familia donde está la cámara
+      });
+
+      navBtnNetwork.addEventListener('click', () => {
+        setActiveNav(navBtnNetwork);
+        switchPanel(panelNetwork); // Muestra la sección de Red de Apoyo corregida
+      });
+
+      // BOTÓN ESTOY BIEN
       const btnSeniorStatus = document.getElementById('btn-senior-status');
       btnSeniorStatus.addEventListener('click', () => {
         document.getElementById('status-checkin-badge').innerText = "✓ Seguro (Reportado)";
@@ -1006,21 +1090,28 @@
         alert('¡Excelente! Has registrado tu toma de medicamento.');
       });
 
-      // MODAL DE CONFIGURACIÓN
+      // MODAL DE CONFIGURACIÓN Y GUARDADO DE DATOS (LocalStorage)
       const modalConfig = document.getElementById('modal-config');
       document.getElementById('btn-open-config').addEventListener('click', () => modalConfig.classList.add('active'));
       document.getElementById('btn-close-config').addEventListener('click', () => modalConfig.classList.remove('active'));
 
       document.getElementById('form-config').addEventListener('submit', (e) => {
         e.preventDefault();
-        appData.seniorName = document.getElementById('cfg-name').value;
-        appData.age = document.getElementById('cfg-age').value;
-        appData.location = document.getElementById('cfg-location').value;
+        
+        // Recoger nuevos valores del formulario
+        savedData.seniorName = document.getElementById('cfg-name').value;
+        savedData.age = document.getElementById('cfg-age').value;
+        savedData.location = document.getElementById('cfg-location').value;
 
-        document.getElementById('display-senior-name').innerText = `${appData.seniorName} (${appData.age} años)`;
-        document.getElementById('display-senior-location').innerText = appData.location;
+        // Guardar en el navegador (LocalStorage)
+        localStorage.setItem('hogarSeguroConfig', JSON.stringify(savedData));
+
+        // Actualizar interfaz en tiempo real
+        document.getElementById('display-senior-name').innerText = `${savedData.seniorName} (${savedData.age} años)`;
+        document.getElementById('display-senior-location').innerText = savedData.location;
         
         modalConfig.classList.remove('active');
+        alert('¡Datos guardados exitosamente en la aplicación!');
       });
 
       // LÓGICA DEL SIMULADOR IOT
@@ -1101,11 +1192,12 @@
       document.getElementById('btn-end-call')?.addEventListener('click', () => modalCall.classList.remove('active'));
       document.getElementById('btn-senior-sos')?.addEventListener('click', () => openCallModal('Red Familiar (SOS)'));
 
-      document.querySelectorAll('.btn-call-contact').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const contactName = e.currentTarget.getAttribute('data-name');
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.btn-call-contact')) {
+          const btn = e.target.closest('.btn-call-contact');
+          const contactName = btn.getAttribute('data-name');
           openCallModal(contactName);
-        });
+        }
       });
 
       document.getElementById('btn-unlock-door')?.addEventListener('click', () => {
