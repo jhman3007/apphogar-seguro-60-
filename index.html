@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hogar Seguro 60+ | App de Monitoreo & Asistencia Senior</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563EB;
+      --primary-dark: #1D4ED8;
+      --primary-light: #EFF6FF;
+      --secondary: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --bg-app: #F8FAFC;
+      --surface: #FFFFFF;
+      --border: #E2E8F0;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 12px 24px -4px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 20px 32px -8px rgba(15, 23, 42, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #0B0F19;
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* CONTENEDOR PRINCIPAL DUAL (SIMULADOR Y APP) */
+    .app-workspace {
+      display: flex;
+      gap: 32px;
+      max-width: 1300px;
+      width: 100%;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    /* MARCO DEL TELÉFONO */
+    .phone-container {
+      width: 100%;
+      max-width: 420px;
+      height: 860px;
+      background: var(--bg-app);
+      border-radius: 48px;
+      box-shadow: 0 0 0 12px #1E293B, 0 32px 64px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 4px solid #334155;
+    }
+
+    /* BARRA DE ESTADO Y DYNAMIC ISLAND */
+    .status-bar {
+      height: 44px;
+      background: transparent;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+      font-size: 14px;
+      font-weight: 700;
+      z-index: 100;
+      color: var(--text-main);
+    }
+
+    .dynamic-island {
+      width: 110px;
+      height: 28px;
+      background: #000;
+      border-radius: 20px;
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 101;
+    }
+
+    /* ENCABEZADO Y SELECTOR DE ROL */
+    .app-header {
+      padding: 10px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+    }
+
+    .brand-logo-img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* INTERRUPTOR MODO SENIOR / FAMILIA */
+    .role-switcher {
+      background: #F1F5F9;
+      padding: 4px;
+      border-radius: 30px;
+      display: flex;
+      gap: 2px;
+      border: 1px solid var(--border);
+    }
+
+    .role-btn {
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: none;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: transparent;
+      color: var(--text-muted);
+    }
+
+    .role-btn.active {
+      background: var(--surface);
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ÁREA DE CONTENIDO PRINCIPAL */
+    .app-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .app-body::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .app-body::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+
+    /* VISTAS DUALES */
+    .view-panel {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .view-panel.active {
+      display: flex;
+    }
+
+    /* MODO SENIOR - DISEÑO ADAPTADO */
+    .senior-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      border: 2px solid #E2E8F0;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+
+    .senior-sos-btn {
+      width: 100%;
+      height: 120px;
+      background: linear-gradient(135deg, #EF4444, #DC2626);
+      border: none;
+      border-radius: var(--radius-lg);
+      color: white;
+      font-weight: 800;
+      font-size: 26px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 12px 24px rgba(239, 68, 68, 0.35);
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    .senior-sos-btn:active {
+      transform: scale(0.97);
+    }
+
+    .senior-sos-btn span {
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0.9;
+    }
+
+    .senior-action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .senior-btn-lg {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .senior-btn-lg icon {
+      font-size: 32px;
+    }
+
+    .medication-banner {
+      background: #EFF6FF;
+      border: 2px solid #BFDBFE;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .med-info h4 {
+      font-size: 18px;
+      color: #1E40AF;
+    }
+
+    .med-info p {
+      font-size: 14px;
+      color: #3B82F6;
+      margin-top: 2px;
+    }
+
+    .btn-check-med {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    /* MODO FAMILIA - DASHBOARD COMPLETO */
+    .status-summary-card {
+      background: linear-gradient(135deg, #1E293B, #0F172A);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .status-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #38BDF8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: #0F172A;
+      border: 2px solid white;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .badge-success { background: rgba(16, 185, 129, 0.2); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-warning { background: rgba(245, 158, 11, 0.2); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-alert { background: rgba(239, 68, 68, 0.2); color: #FCA5A5; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px;
+      border-radius: var(--radius-md);
+    }
+
+    .metric-item {
+      text-align: center;
+    }
+
+    .metric-val {
+      font-size: 15px;
+      font-weight: 800;
+      color: white;
+    }
+
+    .metric-lbl {
+      font-size: 10px;
+      color: #94A3B8;
+      margin-top: 2px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sensor-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sensor-card {
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sensor-icon-wrapper {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .sensor-info {
+      flex: 1;
+      margin-left: 12px;
+    }
+
+    .sensor-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .sensor-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* FEED DE CÁMARA & MONITOREO EN VIVO */
+    .cam-card {
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cam-preview {
+      width: 100%;
+      height: 160px;
+      background: #000;
+      position: relative;
+    }
+
+    .cam-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.85;
+    }
+
+    .cam-live-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .cam-controls {
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface);
+    }
+
+    /* BARRA DE NAVEGACIÓN INFERIOR */
+    .nav-bar {
+      height: 64px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      width: 20%;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-item icon {
+      font-size: 20px;
+    }
+
+    /* PANEL DE CONTROL / SIMULADOR IOT (EXTERNO A LA APP) */
+    .iot-simulator {
+      flex: 1;
+      max-width: 480px;
+      background: #1E293B;
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      color: white;
+      border: 1px solid #334155;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .sim-header {
+      border-bottom: 1px solid #334155;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+
+    .sim-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #38BDF8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sim-subtitle {
+      font-size: 12px;
+      color: #94A3B8;
+      margin-top: 4px;
+    }
+
+    .sim-group-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .sim-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .btn-sim {
+      background: #0F172A;
+      border: 1px solid #334155;
+      color: #E2E8F0;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-sim:hover {
+      background: #334155;
+      border-color: #475569;
+    }
+
+    .btn-sim.danger { border-left: 4px solid var(--danger); }
+    .btn-sim.warning { border-left: 4px solid var(--warning); }
+    .btn-sim.success { border-left: 4px solid var(--secondary); }
+
+    .json-preview {
+      background: #090D16;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-family: monospace;
+      font-size: 11px;
+      color: #38BDF8;
+      max-height: 180px;
+      overflow-y: auto;
+      border: 1px solid #1E293B;
+    }
+
+    /* MODAL Y LLAMADA DE EMERGENCIA */
+    .modal-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .call-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #EF4444;
+      color: white;
+      font-size: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 16px rgba(239, 68, 68, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    .btn-end-call {
+      background: var(--danger);
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      font-size: 16px;
+      font-weight: 800;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    /* MODO CONFIGURACIÓN DINÁMICA DE LA FAMILIA */
+    .config-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: left;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .form-group input {
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-workspace">
+
+    <!-- TELÉFONO - PROTOTIPO MÓVIL INTERACTIVO -->
+    <div class="phone-container">
+      
+      <div class="dynamic-island"></div>
+
+      <!-- BARRA DE ESTADO DEL SISTEMA -->
+      <div class="status-bar">
+        <span>09:41</span>
+        <span style="display:flex; gap: 4px;">📶 🔋 98%</span>
+      </div>
+
+      <!-- ENCABEZADO CON LOGO DE IMAGEN -->
+      <header class="app-header">
+        <div class="brand">
+          <img src="hogar seguro 60+.png" alt="Hogar Seguro 60+" class="brand-logo-img">
+        </div>
+        <div class="role-switcher">
+          <button class="role-btn active" id="btn-role-senior">Senior</button>
+          <button class="role-btn" id="btn-role-family">Familia</button>
+        </div>
+      </header>
+
+      <!-- CUERPO DE LA APLICACIÓN -->
+      <main class="app-body">
+
+        <!-- ================= MODO SENIOR (ADAPTADO & SIMPLE) ================= -->
+        <section class="view-panel active" id="panel-senior">
+          
+          <div class="senior-card" style="background: #FEF2F2; border-color: #FECACA;">
+            <p style="font-size: 14px; font-weight: 700; color: #991B1B; margin-bottom: 8px;">¿NECESITAS AYUDA INMEDIATA?</p>
+            <button class="senior-sos-btn" id="btn-senior-sos">
+              🚨 BOTÓN SOS
+              <span>Presiona para llamar a tu familia</span>
+            </button>
+          </div>
+
+          <div class="medication-banner">
+            <div class="med-info">
+              <h4 id="senior-med-title">Losartán 50mg</h4>
+              <p id="senior-med-time">Próxima dosis: 12:00 PM</p>
+            </div>
+            <button class="btn-check-med" id="btn-take-med">Tomar</button>
+          </div>
+
+          <div class="senior-action-grid">
+            <button class="senior-btn-lg btn-call-contact" data-name="Hija (Carolina)">
+              <icon>📞</icon>
+              Llamar a Hija
+            </button>
+            <button class="senior-btn-lg btn-call-contact" data-name="Vecino (Don Pedro)">
+              <icon>🏠</icon>
+              Llamar Vecino
+            </button>
+            <button class="senior-btn-lg" id="btn-senior-door">
+              <icon>🔔</icon>
+              Ver Timbre
+            </button>
+            <button class="senior-btn-lg" id="btn-senior-status">
+              <icon>☀️</icon>
+              Estoy Bien
+            </button>
+          </div>
+
+        </section>
+
+        <!-- ================= MODO FAMILIA (DASHBOARD COMPLETO) ================= -->
+        <section class="view-panel" id="panel-family">
+
+          <!-- FICHA DE ESTADO GENERAL DEL ADULTO MAYOR -->
+          <div class="status-summary-card">
+            <div class="status-header">
+              <div class="user-profile">
+                <div class="avatar">M</div>
+                <div>
+                  <h3 style="font-size: 16px; font-weight: 800;" id="display-senior-name">Sra. Marta (82 años)</h3>
+                  <p style="font-size: 11px; color: #94A3B8;" id="display-senior-location">Peñalolén, Santiago</p>
+                </div>
+              </div>
+              <span class="badge badge-success" id="status-checkin-badge">✓ Seguro</span>
+            </div>
+
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <div class="metric-val" id="metric-activity">Activo</div>
+                <div class="metric-lbl">Movimiento</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-val" id="metric-meds">1/2</div>
+                <div class="metric-lbl">Medicinas</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-val" id="metric-temp">21°C</div>
+                <div class="metric-lbl">T. Ambiente</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- LISTA DE SENSORES IOT & ESTADOS EN TIEMPO REAL -->
+          <div class="section-title">
+            <span>Red de Sensores IoT</span>
+            <span style="font-size: 11px; color: var(--primary); cursor: pointer;" id="btn-open-config">⚙️ Configurar</span>
+          </div>
+
+          <div class="sensor-list">
+            
+            <!-- RADAR DE CAÍDAS MMWAVE -->
+            <div class="sensor-card">
+              <div class="sensor-icon-wrapper" style="background: #EFF6FF; color: #2563EB;">📡</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Radar de Caídas mmWave</div>
+                <div class="sensor-desc" id="fall-desc">Baño Principal · Normal</div>
+              </div>
+              <span class="badge badge-success" id="fall-badge">OK</span>
+            </div>
+
+            <!-- APERTURA DE REFRIGERADOR (RUTINA ALIMENTARIA) -->
+            <div class="sensor-card">
+              <div class="sensor-icon-wrapper" style="background: #FEF3C7; color: #D97706;">🧊</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Uso de Refrigerador</div>
+                <div class="sensor-desc" id="fridge-desc">Última apertura: 08:30 AM</div>
+              </div>
+              <span class="badge badge-success">Rutina OK</span>
+            </div>
+
+            <!-- SENSOR PUERTA PRINCIPAL -->
+            <div class="sensor-card">
+              <div class="sensor-icon-wrapper" style="background: #F3E8FF; color: #9333EA;">🚪</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Puerta de Acceso</div>
+                <div class="sensor-desc" id="door-desc">Cerrada · Sin anomalías</div>
+              </div>
+              <span class="badge badge-success" id="door-badge">Cerrada</span>
+            </div>
+
+            <!-- DETECTOR DE FUGA DE AGUA / GAS -->
+            <div class="sensor-card">
+              <div class="sensor-icon-wrapper" style="background: #ECFDF5; color: #059669;">💧</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Fuga de Agua / Gas</div>
+                <div class="sensor-desc" id="water-desc">Cocina y Loggia · Seco</div>
+              </div>
+              <span class="badge badge-success" id="water-badge">OK</span>
+            </div>
+
+            <!-- SENSOR DE HUMO -->
+            <div class="sensor-card">
+              <div class="sensor-icon-wrapper" style="background: #FEF2F2; color: #DC2626;">🔥</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Detector de Humo</div>
+                <div class="sensor-desc" id="smoke-desc">Nivel Normal · 0 ppm</div>
+              </div>
+              <span class="badge badge-success" id="smoke-badge">OK</span>
+            </div>
+
+          </div>
+
+          <!-- CÁMARA DE SEGURIDAD INTERACTIVA -->
+          <div class="section-title">
+            <span>Cámara en Vivo</span>
+            <span style="font-size: 11px; color: var(--text-muted);" id="cam-location-label">LIVING PRINCIPAL</span>
+          </div>
+
+          <div class="cam-card">
+            <div class="cam-preview">
+              <div class="cam-live-tag">● EN VIVO</div>
+              <img id="main-cam-feed" src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80" alt="Camara de Seguridad">
+            </div>
+            <div class="cam-controls">
+              <button class="role-btn active" id="btn-cam-living">Living</button>
+              <button class="role-btn" id="btn-cam-hall">Pasillo</button>
+              <button class="role-btn" id="btn-cam-door">Acceso</button>
+            </div>
+          </div>
+
+        </section>
+
+      </main>
+
+      <!-- BARRA DE NAVEGACIÓN INFERIOR DE LA APP -->
+      <nav class="nav-bar">
+        <button class="nav-item active">
+          <icon>🏠</icon>
+          Inicio
+        </button>
+        <button class="nav-item">
+          <icon>💊</icon>
+          Salud
+        </button>
+        <button class="nav-item">
+          <icon>🎥</icon>
+          Cámaras
+        </button>
+        <button class="nav-item">
+          <icon>👥</icon>
+          Red
+        </button>
+      </nav>
+
+      <!-- MODAL TELEFÓNICO (LLAMADA DE EMERGENCIA) -->
+      <div class="modal-overlay" id="modal-call">
+        <div class="modal-card">
+          <div class="call-avatar">📞</div>
+          <h3 style="font-size: 18px; color: var(--text-main);" id="call-target-name">Red Familiar (SOS)</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Conectando llamada prioritaria...</p>
+          <button class="btn-end-call" id="btn-end-call">Finalizar Llamada</button>
+        </div>
+      </div>
+
+      <!-- MODAL VERIFICACIÓN DE TIMBRE (VIDEO CITÓFONO) -->
+      <div class="modal-overlay" id="modal-doorbell">
+        <div class="modal-card">
+          <h3 style="font-size: 18px; margin-bottom: 8px;">🔔 Alguien toca el timbre</h3>
+          <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80" style="width: 100%; height: 160px; object-fit: cover; border-radius: 12px; margin-bottom: 12px;" alt="Visita">
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Repartidor de Farmacia registrado</p>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-check-med" style="flex: 1; background: #10B981;" id="btn-unlock-door">Abrir Puerta</button>
+            <button class="btn-check-med" style="flex: 1; background: #64748B;" id="btn-ignore-doorbell">Ignorar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL CONFIGURACIÓN DATO FAMILIAR -->
+      <div class="modal-overlay" id="modal-config">
+        <div class="modal-card">
+          <h3 style="font-size: 16px; margin-bottom: 12px; text-align: left;">Configurar Adulto Mayor</h3>
+          <form class="config-form" id="form-config">
+            <div class="form-group">
+              <label>Nombre del Residente</label>
+              <input type="text" id="cfg-name" value="Sra. Marta">
+            </div>
+            <div class="form-group">
+              <label>Edad</label>
+              <input type="number" id="cfg-age" value="82">
+            </div>
+            <div class="form-group">
+              <label>Comuna / Ubicación</label>
+              <input type="text" id="cfg-location" value="Peñalolén, Santiago">
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 12px;">
+              <button type="submit" class="btn-check-med" style="flex: 1;">Guardar</button>
+              <button type="button" class="btn-check-med" id="btn-close-config" style="flex: 1; background: #64748B;">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PANEL FLOTANTE - SIMULADOR DE EVENTOS IOT (DEMO TÉCNICA) -->
+    <div class="iot-simulator">
+      <div class="sim-header">
+        <div class="sim-title">
+          <span>⚡ Simulador IoT</span>
+        </div>
+        <div class="sim-subtitle">Inyecta eventos de hardware en tiempo real a la aplicación.</div>
+      </div>
+
+      <div class="sim-group-title">Emergencias Prioritarias</div>
+      <div class="sim-grid">
+        <button class="btn-sim danger" id="btn-sim-sos">🚨 Pulsa Botón SOS</button>
+        <button class="btn-sim danger" id="btn-sim-fall">📡 Detecta Caída</button>
+      </div>
+
+      <div class="sim-group-title">Sensores de la Casa & Rutina</div>
+      <div class="sim-grid">
+        <button class="btn-sim warning" id="btn-sim-doorbell">🔔 Toca el Timbre</button>
+        <button class="btn-sim warning" id="btn-sim-door">🚪 Puerta Abierta</button>
+        <button class="btn-sim danger" id="btn-sim-water">💧 Fuga de Agua</button>
+        <button class="btn-sim danger" id="btn-sim-smoke">🔥 Humo / Gas</button>
+        <button class="btn-sim success" id="btn-sim-fridge">🧊 Abre Refrigerador</button>
+        <button class="btn-sim success" id="btn-sim-snooze">💊 Posponer Meds</button>
+      </div>
+
+      <div class="sim-group-title">Payload JSON Transmitido (MQTT / WebSockets)</div>
+      <div class="json-preview" id="json-preview">
+// Esperando interacción del simulador...
+{
+  "status": "connected",
+  "gateway_id": "GW_HOGAR_SEGURO_001",
+  "signal": "98%"
+}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SCRIPT CON TODA LA LÓGICA DE NAVEGACIÓN, EVENTOS Y SIMULADOR -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+      // ESTADO DE LA APLICACIÓN Y PERSISTENCIA BÁSICA
+      let appData = {
+        seniorName: "Sra. Marta",
+        age: 82,
+        location: "Peñalolén, Santiago",
+        medications: [
+          { id: 1, name: "Losartán 50mg", time: "12:00 PM", taken: false }
+        ]
+      };
+
+      // NAVEGACIÓN ENTRE ROLES (MODO SENIOR VS MODO FAMILIA)
+      const btnRoleSenior = document.getElementById('btn-role-senior');
+      const btnRoleFamily = document.getElementById('btn-role-family');
+      const panelSenior = document.getElementById('panel-senior');
+      const panelFamily = document.getElementById('panel-family');
+
+      btnRoleSenior.addEventListener('click', () => {
+        btnRoleSenior.classList.add('active');
+        btnRoleFamily.classList.remove('active');
+        panelSenior.classList.add('active');
+        panelFamily.classList.remove('active');
+      });
+
+      btnRoleFamily.addEventListener('click', () => {
+        btnRoleFamily.classList.add('active');
+        btnRoleSenior.classList.remove('active');
+        panelFamily.classList.add('active');
+        panelSenior.classList.remove('active');
+      });
+
+      // MANEJO DE MEDICACIÓN (MODO SENIOR)
+      const btnTakeMed = document.getElementById('btn-take-med');
+      btnTakeMed.addEventListener('click', () => {
+        btnTakeMed.innerText = "✓ Tomada";
+        btnTakeMed.style.background = "#10B981";
+        document.getElementById('metric-meds').innerText = "2/2";
+        alert('¡Excelente! Has registrado tu toma de medicamento.');
+      });
+
+      // MODAL DE CONFIGURACIÓN
+      const modalConfig = document.getElementById('modal-config');
+      document.getElementById('btn-open-config').addEventListener('click', () => modalConfig.classList.add('active'));
+      document.getElementById('btn-close-config').addEventListener('click', () => modalConfig.classList.remove('active'));
+
+      document.getElementById('form-config').addEventListener('submit', (e) => {
+        e.preventDefault();
+        appData.seniorName = document.getElementById('cfg-name').value;
+        appData.age = document.getElementById('cfg-age').value;
+        appData.location = document.getElementById('cfg-location').value;
+
+        document.getElementById('display-senior-name').innerText = `${appData.seniorName} (${appData.age} años)`;
+        document.getElementById('display-senior-location').innerText = appData.location;
+        
+        modalConfig.classList.remove('active');
+      });
+
+      // LÓGICA DEL SIMULADOR IOT (EVENTOS EN TIEMPO REAL)
+      const jsonPreview = document.getElementById('json-preview');
+
+      function triggerIoTEvent(type, data, alertMessage) {
+        const payload = {
+          timestamp: new Date().toISOString(),
+          device_id: `IOT_${type.toUpperCase()}_01`,
+          event_type: type,
+          data: data
+        };
+        jsonPreview.innerText = JSON.stringify(payload, null, 2);
+
+        if (alertMessage) {
+          document.getElementById('status-checkin-badge').innerText = "¡ALERTA! 🚨";
+          document.getElementById('status-checkin-badge').className = "badge badge-alert";
+        }
+      }
+
+      // ACCIONES DEL SIMULADOR
+      document.getElementById('btn-sim-sos')?.addEventListener('click', () => {
+        triggerIoTEvent('sos_button', { location: 'Pulsera SOS', battery: '92%' }, 'Botón SOS presionado');
+        openCallModal('Red Familiar (SOS)');
+      });
+
+      document.getElementById('btn-sim-fall')?.addEventListener('click', () => {
+        triggerIoTEvent('fall_radar', { location: 'Baño Principal', confidence: 0.98 }, 'Caída detectada');
+        document.getElementById('fall-desc').innerText = '⚠️ Caída detectada en Baño';
+        document.getElementById('fall-badge').className = 'badge badge-alert';
+        document.getElementById('fall-badge').innerText = 'ALERTA';
+        openCallModal('Alerta por Caída mmWave');
+      });
+
+      document.getElementById('btn-sim-doorbell')?.addEventListener('click', () => {
+        triggerIoTEvent('doorbell', { visitor: 'Desconocido', snapshot: 'cam_door.jpg' }, 'Timbre activado');
+        document.getElementById('modal-doorbell').classList.add('active');
+      });
+
+      document.getElementById('btn-sim-door')?.addEventListener('click', () => {
+        triggerIoTEvent('door_sensor', { state: 'open', duration_sec: 120 }, 'Puerta abierta');
+        document.getElementById('door-desc').innerText = 'Abierta · Hace 2 min';
+        document.getElementById('door-badge').className = 'badge badge-warning';
+        document.getElementById('door-badge').innerText = 'Abierta';
+      });
+
+      document.getElementById('btn-sim-water')?.addEventListener('click', () => {
+        triggerIoTEvent('water_leak', { location: 'Cocina Bajo Mesón' }, 'Fuga de agua');
+        document.getElementById('water-desc').innerText = '⚠️ Humedad detectada';
+        document.getElementById('water-badge').className = 'badge badge-alert';
+        document.getElementById('water-badge').innerText = 'FUGA';
+      });
+
+      document.getElementById('btn-sim-smoke')?.addEventListener('click', () => {
+        triggerIoTEvent('smoke_detector', { ppm: 450, location: 'Cocina' }, 'Humo detectado');
+        document.getElementById('smoke-desc').innerText = '⚠️ Nivel crítico de humo';
+        document.getElementById('smoke-badge').className = 'badge badge-alert';
+        document.getElementById('smoke-badge').innerText = 'HUMO';
+      });
+
+      document.getElementById('btn-sim-fridge')?.addEventListener('click', () => {
+        const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        triggerIoTEvent('fridge_sensor', { last_open: time }, 'Apertura de refrigerador');
+        document.getElementById('fridge-desc').innerText = `Última apertura: ${time}`;
+      });
+
+      document.getElementById('btn-sim-snooze')?.addEventListener('click', () => {
+        triggerIoTEvent('med_snooze', { med_id: 1, delay_min: 15 }, 'Recordatorio pospuesto');
+        alert('Recordatorio de medicina pospuesto 15 minutos.');
+      });
+
+      // CONTROLES DE LLAMADA
+      const modalCall = document.getElementById('modal-call');
+      function openCallModal(targetName) {
+        document.getElementById('call-target-name').innerText = targetName;
+        modalCall.classList.add('active');
+      }
+
+      document.getElementById('btn-end-call')?.addEventListener('click', () => modalCall.classList.remove('active'));
+      document.getElementById('btn-senior-sos')?.addEventListener('click', () => openCallModal('Red Familiar (SOS)'));
+
+      document.querySelectorAll('.btn-call-contact').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const contactName = e.currentTarget.getAttribute('data-name');
+          openCallModal(contactName);
+        });
+      });
+
+      document.getElementById('btn-unlock-door')?.addEventListener('click', () => {
+        document.getElementById('modal-doorbell').classList.remove('active');
+        alert('Puerta desbloqueada a distancia');
+      });
+
+      document.getElementById('btn-ignore-doorbell')?.addEventListener('click', () => {
+        document.getElementById('modal-doorbell').classList.remove('active');
+      });
+
+      // SELECCIÓN DE CÁMARAS
+      const mainCamFeed = document.getElementById('main-cam-feed');
+      const camLabel = document.getElementById('cam-location-label');
+
+      document.getElementById('btn-cam-living')?.addEventListener('click', () => {
+        mainCamFeed.src = "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80";
+        camLabel.innerText = "LIVING PRINCIPAL";
+      });
+
+      document.getElementById('btn-cam-hall')?.addEventListener('click', () => {
+        mainCamFeed.src = "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80";
+        camLabel.innerText = "PASILLO DORMITORIOS";
+      });
+
+      document.getElementById('btn-cam-door')?.addEventListener('click', () => {
+        mainCamFeed.src = "https://images.unsplash.com/photo-1558036117-15d82a90b9b1?auto=format&fit=crop&w=600&q=80";
+        camLabel.innerText = "ACCESO PRINCIPAL";
+      });
+
+    });
+  </script>
+</body>
+</html>
