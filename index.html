@@ -179,7 +179,7 @@
     .senior-card {
       background: var(--surface);
       border-radius: var(--radius-lg);
-      padding: 20px;
+      padding: 16px;
       border: 2px solid #E2E8F0;
       box-shadow: var(--shadow-sm);
       text-align: center;
@@ -187,19 +187,19 @@
 
     .senior-sos-btn {
       width: 100%;
-      height: 100px;
+      height: 80px;
       background: linear-gradient(135deg, #EF4444, #DC2626);
       border: none;
       border-radius: var(--radius-lg);
       color: white;
       font-weight: 800;
-      font-size: 24px;
+      font-size: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      box-shadow: 0 12px 24px rgba(239, 68, 68, 0.35);
+      gap: 4px;
+      box-shadow: 0 8px 16px rgba(239, 68, 68, 0.35);
       cursor: pointer;
       transition: transform 0.1s ease;
     }
@@ -209,7 +209,7 @@
     }
 
     .senior-sos-btn span {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       opacity: 0.9;
     }
@@ -240,24 +240,25 @@
       font-size: 28px;
     }
 
-    /* BANNER DE MEDICAMENTOS MODIFICADO */
+    /* BANNER DE MEDICAMENTOS */
     .medication-banner {
       background: #EFF6FF;
       border: 2px solid #BFDBFE;
       border-radius: var(--radius-md);
-      padding: 16px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
+      text-align: left;
     }
 
     .med-info h4 {
-      font-size: 18px;
+      font-size: 16px;
       color: #1E40AF;
     }
 
     .med-info p {
-      font-size: 14px;
+      font-size: 13px;
       color: #3B82F6;
       margin-top: 2px;
     }
@@ -265,17 +266,17 @@
     .med-buttons-group {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
     }
 
     .btn-check-med {
       background: var(--primary);
       color: white;
       border: none;
-      padding: 12px 18px;
+      padding: 10px 14px;
       border-radius: var(--radius-sm);
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
       width: 100%;
       text-align: center;
@@ -285,10 +286,10 @@
       background: #E2E8F0;
       color: #334155;
       border: none;
-      padding: 10px 18px;
+      padding: 8px 14px;
       border-radius: var(--radius-sm);
       font-weight: 700;
-      font-size: 13px;
+      font-size: 12px;
       cursor: pointer;
       width: 100%;
       text-align: center;
@@ -706,12 +707,12 @@
       <!-- CUERPO DE LA APLICACIÓN -->
       <main class="app-body">
 
-        <!-- ================= MODO SENIOR (INICIO) ================= -->
+        <!-- ================= MODO SENIOR (INICIO) CON TODO INTEGRADO ================= -->
         <section class="view-panel active" id="panel-senior">
           
-          <!-- BOTÓN DE EMERGENCIA -->
+          <!-- BOTÓN DE EMERGENCIA (AYUDA) -->
           <div class="senior-card" style="background: #FEF2F2; border-color: #FECACA;">
-            <p style="font-size: 13px; font-weight: 700; color: #991B1B; margin-bottom: 6px;">¿NECESITAS AYUDA INMEDIATA?</p>
+            <p style="font-size: 12px; font-weight: 700; color: #991B1B; margin-bottom: 4px;">¿NECESITAS AYUDA INMEDIATA?</p>
             <button class="senior-sos-btn" id="btn-senior-sos">
               🚨 BOTÓN SOS
               <span>Presiona para llamar a tu familia</span>
@@ -719,42 +720,18 @@
           </div>
 
           <!-- BOTÓN ESTOY BIEN -->
-          <div class="senior-card" style="background: #ECFDF5; border-color: #A7F3D0;">
-            <p style="font-size: 13px; font-weight: 700; color: #047857; margin-bottom: 6px;">ESTADO DIARIO</p>
-            <button class="senior-sos-btn" id="btn-senior-status" style="background: linear-gradient(135deg, #10B981, #059669); box-shadow: 0 12px 24px rgba(16, 185, 129, 0.35);">
+          <div class="senior-card" style="background: #ECFDF5; border-color: #A7F3D0; padding: 12px;">
+            <button class="senior-sos-btn" id="btn-senior-status" style="height: 60px; font-size: 18px; background: linear-gradient(135deg, #10B981, #059669); box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);">
               🟢 ESTOY BIEN
-              <span>Enviar reporte de tranquilidad a la familia</span>
+              <span style="font-size: 11px;">Enviar reporte de tranquilidad</span>
             </button>
           </div>
 
-          <div class="senior-action-grid">
-            <button class="senior-btn-lg btn-call-contact" data-name="Hija (Carolina)">
-              <icon>📞</icon>
-              Llamar a Hija
-            </button>
-            <button class="senior-btn-lg btn-call-contact" data-name="Vecino (Don Pedro)">
-              <icon>🏠</icon>
-              Llamar Vecino
-            </button>
-            <button class="senior-btn-lg" id="btn-senior-door">
-              <icon>🔔</icon>
-              Ver Timbre
-            </button>
-            <button class="senior-btn-lg" style="visibility: hidden;"></button>
-          </div>
-
-        </section>
-
-        <!-- ================= VISTA MEDICAMENTOS (ANTES SALUD) ================= -->
-        <section class="view-panel" id="panel-medications">
-          <div class="section-title">
-            <span>Control de Medicamentos</span>
-          </div>
-
+          <!-- BANNER DE MEDICAMENTOS RÁPIDO EN PRIMERA PÁGINA -->
           <div class="medication-banner">
             <div class="med-info">
               <h4 id="senior-med-title">Losartán 50mg</h4>
-              <p id="senior-med-time">Próxima dosis: <strong id="next-dose-time">12:00 PM</strong></p>
+              <p>Próxima toma: <strong id="next-dose-time">12:00 PM</strong></p>
             </div>
             <div class="med-buttons-group">
               <button class="btn-check-med" id="btn-take-med">✓ Tomar Medicamento</button>
@@ -762,7 +739,36 @@
             </div>
           </div>
 
-          <div class="sensor-list" style="margin-top: 10px;">
+          <div class="senior-action-grid">
+            <button class="senior-btn-lg btn-call-contact" data-name="Hija (Carolina)">
+              <icon>📞</icon>
+              Llamar a Hija
+            </button>
+            <button class="senior-btn-lg" id="btn-senior-door">
+              <icon>🔔</icon>
+              Ver Timbre
+            </button>
+          </div>
+
+        </section>
+
+        <!-- ================= VISTA MEDICAMENTOS (GESTIÓN Y AGREGAR) ================= -->
+        <section class="view-panel" id="panel-medications">
+          <div class="section-title">
+            <span>Control de Medicamentos</span>
+            <button class="btn-check-med" id="btn-open-add-med" style="width: auto; padding: 6px 10px; font-size: 11px;">+ Agregar</button>
+          </div>
+
+          <div class="sensor-list" id="medicaments-container">
+            <div class="sensor-card">
+              <div class="sensor-icon-wrapper" style="background: #EFF6FF; color: #2563EB;">💊</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Losartán 50mg</div>
+                <div class="sensor-desc">Próxima toma: 12:00 PM</div>
+              </div>
+              <span class="badge badge-warning">Pendiente</span>
+            </div>
+
             <div class="sensor-card">
               <div class="sensor-icon-wrapper" style="background: #ECFDF5; color: #059669;">💊</div>
               <div class="sensor-info">
@@ -908,7 +914,7 @@
 
       </main>
 
-      <!-- BARRA DE NAVEGACIÓN INFERIOR (BOTÓN MEDICAMENTOS ACTUALIZADO) -->
+      <!-- BARRA DE NAVEGACIÓN INFERIOR -->
       <nav class="nav-bar">
         <button class="nav-item active" id="nav-btn-home">
           <icon>🏠</icon>
@@ -938,7 +944,7 @@
         </div>
       </div>
 
-      <!-- MODAL CONFIGURACIÓN -->
+      <!-- MODAL CONFIGURACIÓN RESIDENTE -->
       <div class="modal-overlay" id="modal-config">
         <div class="modal-card">
           <h3 style="font-size: 16px; margin-bottom: 12px; text-align: left;">Configurar Adulto Mayor</h3>
@@ -958,6 +964,27 @@
             <div style="display: flex; gap: 8px; margin-top: 12px;">
               <button type="submit" class="btn-check-med" style="flex: 1;">Guardar</button>
               <button type="button" class="btn-check-med" id="btn-close-config" style="flex: 1; background: #64748B;">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- MODAL AGREGAR MEDICAMENTO -->
+      <div class="modal-overlay" id="modal-add-med">
+        <div class="modal-card">
+          <h3 style="font-size: 16px; margin-bottom: 12px; text-align: left;">Nuevo Medicamento</h3>
+          <form class="config-form" id="form-add-med">
+            <div class="form-group">
+              <label>Nombre y Dosis</label>
+              <input type="text" id="new-med-name" placeholder="Ej: Paracetamol 500mg" required>
+            </div>
+            <div class="form-group">
+              <label>Hora de Toma</label>
+              <input type="text" id="new-med-time" placeholder="Ej: 04:00 PM" required>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 12px;">
+              <button type="submit" class="btn-check-med" style="flex: 1;">Agregar</button>
+              <button type="button" class="btn-check-med" id="btn-close-add-med" style="flex: 1; background: #64748B;">Cancelar</button>
             </div>
           </form>
         </div>
@@ -1062,7 +1089,7 @@
 
       navBtnMeds.addEventListener('click', () => {
         setActiveNav(navBtnMeds);
-        switchPanel(panelMedications); // ¡Botón Medicamentos ahora funciona correctamente!
+        switchPanel(panelMedications);
       });
 
       navBtnCams.addEventListener('click', () => {
@@ -1075,7 +1102,7 @@
         switchPanel(panelNetwork);
       });
 
-      // ACCIONES DE MEDICAMENTOS CON AVISO A FAMILIARES Y CUIDADOR
+      // ACCIONES DE MEDICAMENTOS (EN PRIMERA PÁGINA)
       const btnTakeMed = document.getElementById('btn-take-med');
       const btnSnoozeMed = document.getElementById('btn-snooze-med');
       const nextDoseTime = document.getElementById('next-dose-time');
@@ -1088,9 +1115,36 @@
       });
 
       btnSnoozeMed.addEventListener('click', () => {
-        // Calcular nueva hora sumando 15 min
         nextDoseTime.innerText = "12:15 PM";
         alert('Recordatorio pospuesto 15 minutos. Se ha enviado un aviso de retraso preventivo al cuidador y familiares.');
+      });
+
+      // MODAL AGREGAR MEDICAMENTO
+      const modalAddMed = document.getElementById('modal-add-med');
+      document.getElementById('btn-open-add-med').addEventListener('click', () => modalAddMed.classList.add('active'));
+      document.getElementById('btn-close-add-med').addEventListener('click', () => modalAddMed.classList.remove('active'));
+
+      document.getElementById('form-add-med').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const medName = document.getElementById('new-med-name').value;
+        const medTime = document.getElementById('new-med-time').value;
+
+        const container = document.getElementById('medicaments-container');
+        const newCard = document.createElement('div');
+        newCard.className = 'sensor-card';
+        newCard.innerHTML = `
+          <div class="sensor-icon-wrapper" style="background: #EFF6FF; color: #2563EB;">💊</div>
+          <div class="sensor-info">
+            <div class="sensor-title">${medName}</div>
+            <div class="sensor-desc">Próxima toma: ${medTime}</div>
+          </div>
+          <span class="badge badge-warning">Pendiente</span>
+        `;
+        container.appendChild(newCard);
+
+        modalAddMed.classList.remove('active');
+        document.getElementById('form-add-med').reset();
+        alert('¡Medicamento agregado exitosamente a la lista!');
       });
 
       // BOTÓN ESTOY BIEN
