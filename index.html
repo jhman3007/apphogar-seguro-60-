@@ -427,52 +427,6 @@
       color: var(--text-muted);
     }
 
-    /* CÁMARA EN VIVO */
-    .cam-card {
-      background: var(--surface);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border);
-      overflow: hidden;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .cam-preview {
-      width: 100%;
-      height: 150px;
-      background: #000;
-      position: relative;
-    }
-
-    .cam-preview img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.85;
-    }
-
-    .cam-live-tag {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      background: rgba(239, 68, 68, 0.9);
-      color: white;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 9px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .cam-controls {
-      padding: 8px 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--surface);
-    }
-
     /* BARRA DE NAVEGACIÓN INFERIOR */
     .nav-bar {
       height: 60px;
@@ -592,7 +546,7 @@
       border: 1px solid #1E293B;
     }
 
-    /* MODAL LLAMADA & CONFIGURACIÓN */
+    /* MODAL GENERAL */
     .modal-overlay {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -614,7 +568,7 @@
       border-radius: var(--radius-lg);
       padding: 20px;
       width: 100%;
-      max-width: 310px;
+      max-width: 320px;
       text-align: center;
       box-shadow: var(--shadow-lg);
     }
@@ -671,11 +625,12 @@
       color: var(--text-main);
     }
 
-    .form-group input {
+    .form-group input, .form-group select {
       padding: 8px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border);
       font-size: 12px;
+      background: var(--surface);
     }
   </style>
 </head>
@@ -848,67 +803,50 @@
             </div>
           </div>
 
-          <!-- CÁMARA EN VIVO -->
-          <div class="section-title">
-            <span>Cámara en Vivo</span>
-            <span style="font-size: 10px; color: var(--text-muted);" id="cam-location-label">LIVING PRINCIPAL</span>
-          </div>
-
-          <div class="cam-card">
-            <div class="cam-preview">
-              <div class="cam-live-tag">● EN VIVO</div>
-              <img id="main-cam-feed" src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80" alt="Camara">
-            </div>
-            <div class="cam-controls">
-              <button class="role-btn active" id="btn-cam-living">Living</button>
-              <button class="role-btn" id="btn-cam-hall">Pasillo</button>
-              <button class="role-btn" id="btn-cam-door">Acceso</button>
-            </div>
-          </div>
-
         </section>
 
         <!-- ================= VISTA RED DE APOYO ================= -->
         <section class="view-panel" id="panel-network">
           <div class="section-title">
             <span>Red de Apoyo & Contactos</span>
+            <button class="btn-check-med" id="btn-open-add-contact" style="width: auto; padding: 5px 8px; font-size: 10px;">+ Agregar Persona</button>
           </div>
 
-          <div class="sensor-list">
+          <div class="sensor-list" id="network-container">
             <div class="sensor-card">
               <div class="sensor-icon-wrapper" style="background: #EFF6FF; color: #2563EB;">👩‍👧</div>
               <div class="sensor-info">
-                <div class="sensor-title">Hija (Carolina)</div>
+                <div class="sensor-title">Carolina (Hijo/a)</div>
                 <div class="sensor-desc">+56 9 8765 4321 · Familiar Principal</div>
               </div>
-              <button class="btn-check-med btn-call-contact" data-name="Hija (Carolina)" style="padding: 6px 10px; font-size: 11px; width: auto;">📞 Llamar</button>
+              <button class="btn-check-med btn-call-contact" data-name="Carolina (Hijo/a)" style="padding: 6px 10px; font-size: 11px; width: auto;">📞 Llamar</button>
             </div>
 
             <div class="sensor-card">
               <div class="sensor-icon-wrapper" style="background: #ECFDF5; color: #059669;">🏠</div>
               <div class="sensor-info">
-                <div class="sensor-title">Vecino (Don Pedro)</div>
-                <div class="sensor-desc">+56 9 1234 5678 · Proximidad</div>
+                <div class="sensor-title">Don Pedro (Vecino)</div>
+                <div class="sensor-desc">+56 9 1234 5678 · Contacto Cercano</div>
               </div>
-              <button class="btn-check-med btn-call-contact" data-name="Vecino (Don Pedro)" style="padding: 6px 10px; font-size: 11px; width: auto; background: #059669;">📞 Llamar</button>
+              <button class="btn-check-med btn-call-contact" data-name="Don Pedro (Vecino)" style="padding: 6px 10px; font-size: 11px; width: auto; background: #059669;">📞 Llamar</button>
             </div>
 
             <div class="sensor-card">
               <div class="sensor-icon-wrapper" style="background: #F3E8FF; color: #9333EA;">🩺</div>
               <div class="sensor-info">
-                <div class="sensor-title">Dr. Roberto Soto</div>
-                <div class="sensor-desc">Centro Médico Peñalolén</div>
+                <div class="sensor-title">Dr. Roberto Soto (Doctor)</div>
+                <div class="sensor-desc">+56 9 9988 7766 · Centro Médico Peñalolén</div>
               </div>
-              <button class="btn-check-med btn-call-contact" data-name="Dr. Roberto Soto" style="padding: 6px 10px; font-size: 11px; width: auto; background: #9333EA;">📞 Llamar</button>
+              <button class="btn-check-med btn-call-contact" data-name="Dr. Roberto Soto (Doctor)" style="padding: 6px 10px; font-size: 11px; width: auto; background: #9333EA;">📞 Llamar</button>
             </div>
 
             <div class="sensor-card">
               <div class="sensor-icon-wrapper" style="background: #FEF3C7; color: #D97706;">🧑‍⚕️</div>
               <div class="sensor-info">
-                <div class="sensor-title">Cuidador (Ana María)</div>
+                <div class="sensor-title">Ana María (Cuidador)</div>
                 <div class="sensor-desc">+56 9 4433 2211 · Turno Mañana</div>
               </div>
-              <button class="btn-check-med btn-call-contact" data-name="Cuidador (Ana María)" style="padding: 6px 10px; font-size: 11px; width: auto; background: #D97706;">📞 Llamar</button>
+              <button class="btn-check-med btn-call-contact" data-name="Ana María (Cuidador)" style="padding: 6px 10px; font-size: 11px; width: auto; background: #D97706;">📞 Llamar</button>
             </div>
           </div>
         </section>
@@ -971,6 +909,41 @@
             <div style="display: flex; gap: 8px; margin-top: 10px;">
               <button type="submit" class="btn-check-med" style="flex: 1;">Agregar</button>
               <button type="button" class="btn-check-med" id="btn-close-add-med" style="flex: 1; background: #64748B;">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- NUEVO MODAL: AGREGAR CONTACTO A RED -->
+      <div class="modal-overlay" id="modal-add-contact">
+        <div class="modal-card">
+          <h3 style="font-size: 15px; margin-bottom: 10px; text-align: left;">Agregar Persona a la Red</h3>
+          <form class="config-form" id="form-add-contact">
+            <div class="form-group">
+              <label>Tipo de Vínculo</label>
+              <select id="contact-role" required>
+                <option value="Hijo/a">Hijo/a</option>
+                <option value="Doctor">Doctor</option>
+                <option value="Cuidador">Cuidador</option>
+                <option value="Vecino">Vecino</option>
+                <option value="Interesado">Interesado</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Nombre</label>
+              <input type="text" id="contact-name" placeholder="Ej: Juan" required>
+            </div>
+            <div class="form-group">
+              <label>Apellido</label>
+              <input type="text" id="contact-lastname" placeholder="Ej: Pérez" required>
+            </div>
+            <div class="form-group">
+              <label>Número de Teléfono</label>
+              <input type="text" id="contact-phone" placeholder="Ej: +56 9 1122 3344" required>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 10px;">
+              <button type="submit" class="btn-check-med" style="flex: 1;">Guardar</button>
+              <button type="button" class="btn-check-med" id="btn-close-add-contact" style="flex: 1; background: #64748B;">Cancelar</button>
             </div>
           </form>
         </div>
@@ -1134,6 +1107,48 @@
         alert('¡Medicamento agregado exitosamente a la lista!');
       });
 
+      // MODAL AGREGAR CONTACTO A RED
+      const modalAddContact = document.getElementById('modal-add-contact');
+      document.getElementById('btn-open-add-contact').addEventListener('click', () => modalAddContact.classList.add('active'));
+      document.getElementById('btn-close-add-contact').addEventListener('click', () => modalAddContact.classList.remove('active'));
+
+      document.getElementById('form-add-contact').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const role = document.getElementById('contact-role').value;
+        const name = document.getElementById('contact-name').value;
+        const lastname = document.getElementById('contact-lastname').value;
+        const phone = document.getElementById('contact-phone').value;
+
+        // Definir ícono según el rol seleccionado
+        let icon = "👤";
+        let bgColor = "#EFF6FF";
+        let iconColor = "#2563EB";
+
+        if (role === 'Hijo/a') { icon = "👩‍👧"; bgColor = "#EFF6FF"; iconColor = "#2563EB"; }
+        else if (role === 'Doctor') { icon = "🩺"; bgColor = "#F3E8FF"; iconColor = "#9333EA"; }
+        else if (role === 'Cuidador') { icon = "🧑‍⚕️"; bgColor = "#FEF3C7"; iconColor = "#D97706"; }
+        else if (role === 'Vecino') { icon = "🏠"; bgColor = "#ECFDF5"; iconColor = "#059669"; }
+        else if (role === 'Interesado') { icon = "🤝"; bgColor = "#F1F5F9"; iconColor = "#475569"; }
+
+        const container = document.getElementById('network-container');
+        const newCard = document.createElement('div');
+        newCard.className = 'sensor-card';
+        const fullName = `${name} ${lastname} (${role})`;
+        newCard.innerHTML = `
+          <div class="sensor-icon-wrapper" style="background: ${bgColor}; color: ${iconColor};">${icon}</div>
+          <div class="sensor-info">
+            <div class="sensor-title">${name} ${lastname}</div>
+            <div class="sensor-desc">${phone} · ${role}</div>
+          </div>
+          <button class="btn-check-med btn-call-contact" data-name="${fullName}" style="padding: 6px 10px; font-size: 11px; width: auto; background: ${iconColor};">📞 Llamar</button>
+        `;
+        container.appendChild(newCard);
+
+        modalAddContact.classList.remove('active');
+        document.getElementById('form-add-contact').reset();
+        alert('¡Persona agregada exitosamente a la red de apoyo!');
+      });
+
       // BOTÓN ESTOY BIEN
       document.getElementById('btn-senior-status').addEventListener('click', () => {
         document.getElementById('status-checkin-badge').innerText = "✓ Seguro (Reportado)";
@@ -1176,23 +1191,6 @@
           const btn = e.target.closest('.btn-call-contact');
           openCallModal(btn.getAttribute('data-name'));
         }
-      });
-
-      // SELECCIÓN DE CÁMARAS
-      const mainCamFeed = document.getElementById('main-cam-feed');
-      const camLabel = document.getElementById('cam-location-label');
-
-      document.getElementById('btn-cam-living')?.addEventListener('click', () => {
-        mainCamFeed.src = "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80";
-        camLabel.innerText = "LIVING PRINCIPAL";
-      });
-      document.getElementById('btn-cam-hall')?.addEventListener('click', () => {
-        mainCamFeed.src = "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80";
-        camLabel.innerText = "PASILLO DORMITORIOS";
-      });
-      document.getElementById('btn-cam-door')?.addEventListener('click', () => {
-        mainCamFeed.src = "https://images.unsplash.com/photo-1558036117-15d82a90b9b1?auto=format&fit=crop&w=600&q=80";
-        camLabel.innerText = "ACCESO PRINCIPAL";
       });
 
     });
