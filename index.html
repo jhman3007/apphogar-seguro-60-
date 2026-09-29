@@ -437,7 +437,7 @@
 
     .cam-preview {
       width: 100%;
-      height: 160px;
+      height: 180px;
       background: #000;
       position: relative;
     }
@@ -780,6 +780,35 @@
           </div>
         </section>
 
+        <!-- ================= VISTA CÁMARAS (EXCLUSIVA) ================= -->
+        <section class="view-panel" id="panel-cams">
+          <div class="section-title">
+            <span>Cámaras de Seguridad en Vivo</span>
+            <span style="font-size: 11px; color: var(--text-muted);" id="cam-location-label">LIVING PRINCIPAL</span>
+          </div>
+
+          <div class="cam-card">
+            <div class="cam-preview">
+              <div class="cam-live-tag">● EN VIVO</div>
+              <img id="main-cam-feed" src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80" alt="Camara">
+            </div>
+            <div class="cam-controls">
+              <button class="role-btn active" id="btn-cam-living">Living</button>
+              <button class="role-btn" id="btn-cam-hall">Pasillo</button>
+              <button class="role-btn" id="btn-cam-door">Acceso</button>
+            </div>
+          </div>
+
+          <div class="sensor-card" style="margin-top: 8px;">
+            <div class="sensor-icon-wrapper" style="background: #EFF6FF; color: #2563EB;">📹</div>
+            <div class="sensor-info">
+              <div class="sensor-title">Video Citófono Puerta</div>
+              <div class="sensor-desc">Estado: En línea · 1080p HD</div>
+            </div>
+            <span class="badge badge-success">Activo</span>
+          </div>
+        </section>
+
         <!-- ================= MODO FAMILIA ================= -->
         <section class="view-panel" id="panel-family">
 
@@ -847,24 +876,6 @@
             </div>
           </div>
 
-          <!-- CÁMARA EN VIVO -->
-          <div class="section-title">
-            <span>Cámara en Vivo</span>
-            <span style="font-size: 11px; color: var(--text-muted);" id="cam-location-label">LIVING PRINCIPAL</span>
-          </div>
-
-          <div class="cam-card">
-            <div class="cam-preview">
-              <div class="cam-live-tag">● EN VIVO</div>
-              <img id="main-cam-feed" src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80" alt="Camara">
-            </div>
-            <div class="cam-controls">
-              <button class="role-btn active" id="btn-cam-living">Living</button>
-              <button class="role-btn" id="btn-cam-hall">Pasillo</button>
-              <button class="role-btn" id="btn-cam-door">Acceso</button>
-            </div>
-          </div>
-
         </section>
 
         <!-- ================= VISTA RED DE APOYO ================= -->
@@ -914,7 +925,7 @@
 
       </main>
 
-      <!-- BARRA DE NAVEGACIÓN INFERIOR -->
+      <!-- BARRA DE NAVEGACIÓN INFERIOR CORREGIDA -->
       <nav class="nav-bar">
         <button class="nav-item active" id="nav-btn-home">
           <icon>🏠</icon>
@@ -1048,21 +1059,25 @@
       const btnRoleFamily = document.getElementById('btn-role-family');
       const panelSenior = document.getElementById('panel-senior');
       const panelMedications = document.getElementById('panel-medications');
+      const panelCams = document.getElementById('panel-cams');
       const panelFamily = document.getElementById('panel-family');
       const panelNetwork = document.getElementById('panel-network');
 
       function switchPanel(targetPanel) {
         panelSenior.classList.remove('active');
         panelMedications.classList.remove('active');
+        panelCams.classList.remove('active');
         panelFamily.classList.remove('active');
         panelNetwork.classList.remove('active');
         targetPanel.classList.add('active');
       }
 
+      // Selector de rol superior (Senior / Familia)
       btnRoleSenior.addEventListener('click', () => {
         btnRoleSenior.classList.add('active');
         btnRoleFamily.classList.remove('active');
         switchPanel(panelSenior);
+        setActiveNav(navBtnHome);
       });
 
       btnRoleFamily.addEventListener('click', () => {
@@ -1071,7 +1086,7 @@
         switchPanel(panelFamily);
       });
 
-      // NAVEGACIÓN INFERIOR
+      // NAVEGACIÓN INFERIOR (Independiente y corregida)
       const navBtnHome = document.getElementById('nav-btn-home');
       const navBtnMeds = document.getElementById('nav-btn-meds');
       const navBtnCams = document.getElementById('nav-btn-cams');
@@ -1085,6 +1100,8 @@
       navBtnHome.addEventListener('click', () => {
         setActiveNav(navBtnHome);
         switchPanel(panelSenior);
+        btnRoleSenior.classList.add('active');
+        btnRoleFamily.classList.remove('active');
       });
 
       navBtnMeds.addEventListener('click', () => {
@@ -1094,7 +1111,7 @@
 
       navBtnCams.addEventListener('click', () => {
         setActiveNav(navBtnCams);
-        btnRoleFamily.click();
+        switchPanel(panelCams); // ¡Ahora muestra exclusivamente las cámaras!
       });
 
       navBtnNetwork.addEventListener('click', () => {
@@ -1191,7 +1208,7 @@
         }
       });
 
-      // CAMARAS
+      // SELECCIÓN DE CÁMARAS
       const mainCamFeed = document.getElementById('main-cam-feed');
       const camLabel = document.getElementById('cam-location-label');
 
