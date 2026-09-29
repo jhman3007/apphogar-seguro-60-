@@ -240,14 +240,15 @@
       font-size: 28px;
     }
 
+    /* BANNER DE MEDICAMENTOS MODIFICADO */
     .medication-banner {
       background: #EFF6FF;
       border: 2px solid #BFDBFE;
       border-radius: var(--radius-md);
       padding: 16px;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .med-info h4 {
@@ -261,6 +262,12 @@
       margin-top: 2px;
     }
 
+    .med-buttons-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
     .btn-check-med {
       background: var(--primary);
       color: white;
@@ -270,6 +277,21 @@
       font-weight: 700;
       font-size: 14px;
       cursor: pointer;
+      width: 100%;
+      text-align: center;
+    }
+
+    .btn-snooze-med {
+      background: #E2E8F0;
+      color: #334155;
+      border: none;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
     }
 
     /* MODO FAMILIA - DASHBOARD COMPLETO */
@@ -403,7 +425,7 @@
       color: var(--text-muted);
     }
 
-    /* FEED DE CÁMARA & MONITOREO EN VIVO */
+    /* CÁMARA EN VIVO */
     .cam-card {
       background: var(--surface);
       border-radius: var(--radius-md);
@@ -482,7 +504,7 @@
       font-size: 20px;
     }
 
-    /* PANEL DE CONTROL / SIMULADOR IOT (EXTERNO A LA APP) */
+    /* SIMULADOR IOT */
     .iot-simulator {
       flex: 1;
       max-width: 480px;
@@ -568,7 +590,7 @@
       border: 1px solid #1E293B;
     }
 
-    /* MODAL Y LLAMADA DE EMERGENCIA */
+    /* MODAL LLAMADA & CONFIGURACIÓN */
     .modal-overlay {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -628,7 +650,6 @@
       cursor: pointer;
     }
 
-    /* MODO CONFIGURACIÓN DINÁMICA */
     .config-form {
       display: flex;
       flex-direction: column;
@@ -685,7 +706,7 @@
       <!-- CUERPO DE LA APLICACIÓN -->
       <main class="app-body">
 
-        <!-- ================= MODO SENIOR (ADAPTADO & SIMPLE) ================= -->
+        <!-- ================= MODO SENIOR (INICIO) ================= -->
         <section class="view-panel active" id="panel-senior">
           
           <!-- BOTÓN DE EMERGENCIA -->
@@ -697,21 +718,13 @@
             </button>
           </div>
 
-          <!-- BOTÓN ESTOY BIEN (GIGANTE Y VERDE) -->
+          <!-- BOTÓN ESTOY BIEN -->
           <div class="senior-card" style="background: #ECFDF5; border-color: #A7F3D0;">
             <p style="font-size: 13px; font-weight: 700; color: #047857; margin-bottom: 6px;">ESTADO DIARIO</p>
             <button class="senior-sos-btn" id="btn-senior-status" style="background: linear-gradient(135deg, #10B981, #059669); box-shadow: 0 12px 24px rgba(16, 185, 129, 0.35);">
               🟢 ESTOY BIEN
               <span>Enviar reporte de tranquilidad a la familia</span>
             </button>
-          </div>
-
-          <div class="medication-banner">
-            <div class="med-info">
-              <h4 id="senior-med-title">Losartán 50mg</h4>
-              <p id="senior-med-time">Próxima dosis: 12:00 PM</p>
-            </div>
-            <button class="btn-check-med" id="btn-take-med">Tomar</button>
           </div>
 
           <div class="senior-action-grid">
@@ -727,17 +740,44 @@
               <icon>🔔</icon>
               Ver Timbre
             </button>
-            <button class="senior-btn-lg" style="visibility: hidden;">
-              <!-- Espacio equilibrado -->
-            </button>
+            <button class="senior-btn-lg" style="visibility: hidden;"></button>
           </div>
 
         </section>
 
-        <!-- ================= MODO FAMILIA (DASHBOARD COMPLETO) ================= -->
+        <!-- ================= VISTA MEDICAMENTOS (ANTES SALUD) ================= -->
+        <section class="view-panel" id="panel-medications">
+          <div class="section-title">
+            <span>Control de Medicamentos</span>
+          </div>
+
+          <div class="medication-banner">
+            <div class="med-info">
+              <h4 id="senior-med-title">Losartán 50mg</h4>
+              <p id="senior-med-time">Próxima dosis: <strong id="next-dose-time">12:00 PM</strong></p>
+            </div>
+            <div class="med-buttons-group">
+              <button class="btn-check-med" id="btn-take-med">✓ Tomar Medicamento</button>
+              <button class="btn-snooze-med" id="btn-snooze-med">⏰ Posponer 15 minutos</button>
+            </div>
+          </div>
+
+          <div class="sensor-list" style="margin-top: 10px;">
+            <div class="sensor-card">
+              <div class="sensor-icon-wrapper" style="background: #ECFDF5; color: #059669;">💊</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Aspirina 100mg</div>
+                <div class="sensor-desc">Tomado hoy a las 08:00 AM</div>
+              </div>
+              <span class="badge badge-success">Completado</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= MODO FAMILIA ================= -->
         <section class="view-panel" id="panel-family">
 
-          <!-- FICHA DE ESTADO GENERAL DEL ADULTO MAYOR -->
+          <!-- FICHA DE ESTADO GENERAL -->
           <div class="status-summary-card">
             <div class="status-header">
               <div class="user-profile">
@@ -766,7 +806,7 @@
             </div>
           </div>
 
-          <!-- LISTA DE SENSORES IOT & ESTADOS EN TIEMPO REAL -->
+          <!-- SENSORES IOT -->
           <div class="section-title">
             <span>Red de Sensores IoT</span>
             <span style="font-size: 11px; color: var(--primary); cursor: pointer;" id="btn-open-config">⚙️ Configurar</span>
@@ -799,24 +839,6 @@
               </div>
               <span class="badge badge-success" id="door-badge">Cerrada</span>
             </div>
-
-            <div class="sensor-card">
-              <div class="sensor-icon-wrapper" style="background: #ECFDF5; color: #059669;">💧</div>
-              <div class="sensor-info">
-                <div class="sensor-title">Fuga de Agua / Gas</div>
-                <div class="sensor-desc" id="water-desc">Cocina y Loggia · Seco</div>
-              </div>
-              <span class="badge badge-success" id="water-badge">OK</span>
-            </div>
-
-            <div class="sensor-card">
-              <div class="sensor-icon-wrapper" style="background: #FEF2F2; color: #DC2626;">🔥</div>
-              <div class="sensor-info">
-                <div class="sensor-title">Detector de Humo</div>
-                <div class="sensor-desc" id="smoke-desc">Nivel Normal · 0 ppm</div>
-              </div>
-              <span class="badge badge-success" id="smoke-badge">OK</span>
-            </div>
           </div>
 
           <!-- CÁMARA EN VIVO -->
@@ -828,7 +850,7 @@
           <div class="cam-card">
             <div class="cam-preview">
               <div class="cam-live-tag">● EN VIVO</div>
-              <img id="main-cam-feed" src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80" alt="Camara de Seguridad">
+              <img id="main-cam-feed" src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80" alt="Camara">
             </div>
             <div class="cam-controls">
               <button class="role-btn active" id="btn-cam-living">Living</button>
@@ -839,66 +861,62 @@
 
         </section>
 
-        <!-- ================= VISTA RED DE APOYO & CONTACTOS ================= -->
+        <!-- ================= VISTA RED DE APOYO ================= -->
         <section class="view-panel" id="panel-network">
           <div class="section-title">
             <span>Red de Apoyo & Contactos</span>
           </div>
 
           <div class="sensor-list">
-            <!-- FAMILIAR 1 -->
             <div class="sensor-card">
               <div class="sensor-icon-wrapper" style="background: #EFF6FF; color: #2563EB;">👩‍👧</div>
               <div class="sensor-info">
                 <div class="sensor-title">Hija (Carolina)</div>
                 <div class="sensor-desc">+56 9 8765 4321 · Familiar Principal</div>
               </div>
-              <button class="btn-check-med btn-call-contact" data-name="Hija (Carolina)" style="padding: 8px 12px; font-size: 12px;">📞 Llamar</button>
+              <button class="btn-check-med btn-call-contact" data-name="Hija (Carolina)" style="padding: 8px 12px; font-size: 12px; width: auto;">📞 Llamar</button>
             </div>
 
-            <!-- FAMILIAR 2 / VECINO -->
             <div class="sensor-card">
               <div class="sensor-icon-wrapper" style="background: #ECFDF5; color: #059669;">🏠</div>
               <div class="sensor-info">
                 <div class="sensor-title">Vecino (Don Pedro)</div>
                 <div class="sensor-desc">+56 9 1234 5678 · Contacto de Proximidad</div>
               </div>
-              <button class="btn-check-med btn-call-contact" data-name="Vecino (Don Pedro)" style="padding: 8px 12px; font-size: 12px; background: #059669;">📞 Llamar</button>
+              <button class="btn-check-med btn-call-contact" data-name="Vecino (Don Pedro)" style="padding: 8px 12px; font-size: 12px; width: auto; background: #059669;">📞 Llamar</button>
             </div>
 
-            <!-- MÉDICO -->
             <div class="sensor-card">
               <div class="sensor-icon-wrapper" style="background: #F3E8FF; color: #9333EA;">🩺</div>
               <div class="sensor-info">
                 <div class="sensor-title">Dr. Roberto Soto</div>
                 <div class="sensor-desc">Centro Médico Peñalolén · Cabecera</div>
               </div>
-              <button class="btn-check-med btn-call-contact" data-name="Dr. Roberto Soto" style="padding: 8px 12px; font-size: 12px; background: #9333EA;">📞 Llamar</button>
+              <button class="btn-check-med btn-call-contact" data-name="Dr. Roberto Soto" style="padding: 8px 12px; font-size: 12px; width: auto; background: #9333EA;">📞 Llamar</button>
             </div>
 
-            <!-- CUIDADOR -->
             <div class="sensor-card">
               <div class="sensor-icon-wrapper" style="background: #FEF3C7; color: #D97706;">🧑‍⚕️</div>
               <div class="sensor-info">
                 <div class="sensor-title">Cuidador (Ana María)</div>
                 <div class="sensor-desc">+56 9 4433 2211 · Turno Mañana</div>
               </div>
-              <button class="btn-check-med btn-call-contact" data-name="Cuidador (Ana María)" style="padding: 8px 12px; font-size: 12px; background: #D97706;">📞 Llamar</button>
+              <button class="btn-check-med btn-call-contact" data-name="Cuidador (Ana María)" style="padding: 8px 12px; font-size: 12px; width: auto; background: #D97706;">📞 Llamar</button>
             </div>
           </div>
         </section>
 
       </main>
 
-      <!-- BARRA DE NAVEGACIÓN INFERIOR DE LA APP -->
+      <!-- BARRA DE NAVEGACIÓN INFERIOR (BOTÓN MEDICAMENTOS ACTUALIZADO) -->
       <nav class="nav-bar">
         <button class="nav-item active" id="nav-btn-home">
           <icon>🏠</icon>
           Inicio
         </button>
-        <button class="nav-item" id="nav-btn-health">
+        <button class="nav-item" id="nav-btn-meds">
           <icon>💊</icon>
-          Salud
+          Medicamentos
         </button>
         <button class="nav-item" id="nav-btn-cams">
           <icon>🎥</icon>
@@ -910,7 +928,7 @@
         </button>
       </nav>
 
-      <!-- MODAL TELEFÓNICO (LLAMADA DE EMERGENCIA) -->
+      <!-- MODAL TELEFÓNICO -->
       <div class="modal-overlay" id="modal-call">
         <div class="modal-card">
           <div class="call-avatar">📞</div>
@@ -920,20 +938,7 @@
         </div>
       </div>
 
-      <!-- MODAL VERIFICACIÓN DE TIMBRE (VIDEO CITÓFONO) -->
-      <div class="modal-overlay" id="modal-doorbell">
-        <div class="modal-card">
-          <h3 style="font-size: 18px; margin-bottom: 8px;">🔔 Alguien toca el timbre</h3>
-          <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80" style="width: 100%; height: 160px; object-fit: cover; border-radius: 12px; margin-bottom: 12px;" alt="Visita">
-          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Repartidor de Farmacia registrado</p>
-          <div style="display: flex; gap: 8px;">
-            <button class="btn-check-med" style="flex: 1; background: #10B981;" id="btn-unlock-door">Abrir Puerta</button>
-            <button class="btn-check-med" style="flex: 1; background: #64748B;" id="btn-ignore-doorbell">Ignorar</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- MODAL CONFIGURACIÓN CON GUARDADO REAL -->
+      <!-- MODAL CONFIGURACIÓN -->
       <div class="modal-overlay" id="modal-config">
         <div class="modal-card">
           <h3 style="font-size: 16px; margin-bottom: 12px; text-align: left;">Configurar Adulto Mayor</h3>
@@ -960,7 +965,7 @@
 
     </div>
 
-    <!-- PANEL FLOTANTE - SIMULADOR DE EVENTOS IOT -->
+    <!-- PANEL FLOTANTE - SIMULADOR IOT -->
     <div class="iot-simulator">
       <div class="sim-header">
         <div class="sim-title">
@@ -977,54 +982,51 @@
 
       <div class="sim-group-title">Sensores de la Casa & Rutina</div>
       <div class="sim-grid">
-        <button class="btn-sim warning" id="btn-sim-doorbell">🔔 Toca el Timbre</button>
         <button class="btn-sim warning" id="btn-sim-door">🚪 Puerta Abierta</button>
         <button class="btn-sim danger" id="btn-sim-water">💧 Fuga de Agua</button>
-        <button class="btn-sim danger" id="btn-sim-smoke">🔥 Humo / Gas</button>
         <button class="btn-sim success" id="btn-sim-fridge">🧊 Abre Refrigerador</button>
-        <button class="btn-sim success" id="btn-sim-snooze">💊 Posponer Meds</button>
       </div>
 
-      <div class="sim-group-title">Payload JSON Transmitido (MQTT / WebSockets)</div>
+      <div class="sim-group-title">Payload JSON Transmitido</div>
       <div class="json-preview" id="json-preview">
 // Esperando interacción del simulador...
 {
   "status": "connected",
-  "gateway_id": "GW_HOGAR_SEGURO_001",
-  "signal": "98%"
+  "gateway_id": "GW_HOGAR_SEGURO_001"
 }
       </div>
     </div>
 
   </div>
 
-  <!-- SCRIPT CON LÓGICA DE NAVEGACIÓN, RED DE APOYO Y PERSISTENCIA (LOCALSTORAGE) -->
+  <!-- SCRIPT DE FUNCIONALIDAD -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-      // CARGAR DATOS GUARDADOS PREVIAMENTE (SI EXISTEN)
+      // CARGAR DATOS PERSISTENTES
       let savedData = JSON.parse(localStorage.getItem('hogarSeguroConfig')) || {
         seniorName: "Sra. Marta",
         age: 82,
         location: "Peñalolén, Santiago"
       };
 
-      // Aplicar datos cargados en pantalla
       document.getElementById('display-senior-name').innerText = `${savedData.seniorName} (${savedData.age} años)`;
       document.getElementById('display-senior-location').innerText = savedData.location;
       document.getElementById('cfg-name').value = savedData.seniorName;
       document.getElementById('cfg-age').value = savedData.age;
       document.getElementById('cfg-location').value = savedData.location;
 
-      // NAVEGACIÓN ENTRE ROLES (Senior / Familia)
+      // NAVEGACIÓN ENTRE PANELES
       const btnRoleSenior = document.getElementById('btn-role-senior');
       const btnRoleFamily = document.getElementById('btn-role-family');
       const panelSenior = document.getElementById('panel-senior');
+      const panelMedications = document.getElementById('panel-medications');
       const panelFamily = document.getElementById('panel-family');
       const panelNetwork = document.getElementById('panel-network');
 
       function switchPanel(targetPanel) {
         panelSenior.classList.remove('active');
+        panelMedications.classList.remove('active');
         panelFamily.classList.remove('active');
         panelNetwork.classList.remove('active');
         targetPanel.classList.add('active');
@@ -1042,14 +1044,14 @@
         switchPanel(panelFamily);
       });
 
-      // NAVEGACIÓN INFERIOR (Barra de botones)
+      // NAVEGACIÓN INFERIOR
       const navBtnHome = document.getElementById('nav-btn-home');
-      const navBtnHealth = document.getElementById('nav-btn-health');
+      const navBtnMeds = document.getElementById('nav-btn-meds');
       const navBtnCams = document.getElementById('nav-btn-cams');
       const navBtnNetwork = document.getElementById('nav-btn-network');
 
       function setActiveNav(btn) {
-        [navBtnHome, navBtnHealth, navBtnCams, navBtnNetwork].forEach(b => b.classList.remove('active'));
+        [navBtnHome, navBtnMeds, navBtnCams, navBtnNetwork].forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
       }
 
@@ -1058,131 +1060,67 @@
         switchPanel(panelSenior);
       });
 
-      navBtnHealth.addEventListener('click', () => {
-        setActiveNav(navBtnHealth);
-        switchPanel(panelSenior); // O panel de salud específico
+      navBtnMeds.addEventListener('click', () => {
+        setActiveNav(navBtnMeds);
+        switchPanel(panelMedications); // ¡Botón Medicamentos ahora funciona correctamente!
       });
 
       navBtnCams.addEventListener('click', () => {
         setActiveNav(navBtnCams);
-        btnRoleFamily.click(); // Cambia a familia donde está la cámara
+        btnRoleFamily.click();
       });
 
       navBtnNetwork.addEventListener('click', () => {
         setActiveNav(navBtnNetwork);
-        switchPanel(panelNetwork); // Muestra la sección de Red de Apoyo corregida
+        switchPanel(panelNetwork);
+      });
+
+      // ACCIONES DE MEDICAMENTOS CON AVISO A FAMILIARES Y CUIDADOR
+      const btnTakeMed = document.getElementById('btn-take-med');
+      const btnSnoozeMed = document.getElementById('btn-snooze-med');
+      const nextDoseTime = document.getElementById('next-dose-time');
+
+      btnTakeMed.addEventListener('click', () => {
+        btnTakeMed.innerText = "✓ Medicamento Tomado";
+        btnTakeMed.style.background = "#10B981";
+        document.getElementById('metric-meds').innerText = "2/2";
+        alert('¡Registrado! Notificación enviada a los familiares y al cuidador: "Losartán tomado a tiempo".');
+      });
+
+      btnSnoozeMed.addEventListener('click', () => {
+        // Calcular nueva hora sumando 15 min
+        nextDoseTime.innerText = "12:15 PM";
+        alert('Recordatorio pospuesto 15 minutos. Se ha enviado un aviso de retraso preventivo al cuidador y familiares.');
       });
 
       // BOTÓN ESTOY BIEN
-      const btnSeniorStatus = document.getElementById('btn-senior-status');
-      btnSeniorStatus.addEventListener('click', () => {
+      document.getElementById('btn-senior-status').addEventListener('click', () => {
         document.getElementById('status-checkin-badge').innerText = "✓ Seguro (Reportado)";
         document.getElementById('status-checkin-badge').className = "badge badge-success";
-        alert('¡Reporte enviado! La familia ha sido notificada de que te encuentras bien.');
+        alert('¡Reporte enviado! La familia y el cuidador han sido notificados de que te encuentras bien.');
       });
 
-      // MANEJO DE MEDICACIÓN
-      const btnTakeMed = document.getElementById('btn-take-med');
-      btnTakeMed.addEventListener('click', () => {
-        btnTakeMed.innerText = "✓ Tomada";
-        btnTakeMed.style.background = "#10B981";
-        document.getElementById('metric-meds').innerText = "2/2";
-        alert('¡Excelente! Has registrado tu toma de medicamento.');
-      });
-
-      // MODAL DE CONFIGURACIÓN Y GUARDADO DE DATOS (LocalStorage)
+      // CONFIGURACIÓN (LocalStorage)
       const modalConfig = document.getElementById('modal-config');
       document.getElementById('btn-open-config').addEventListener('click', () => modalConfig.classList.add('active'));
       document.getElementById('btn-close-config').addEventListener('click', () => modalConfig.classList.remove('active'));
 
       document.getElementById('form-config').addEventListener('submit', (e) => {
         e.preventDefault();
-        
-        // Recoger nuevos valores del formulario
         savedData.seniorName = document.getElementById('cfg-name').value;
         savedData.age = document.getElementById('cfg-age').value;
         savedData.location = document.getElementById('cfg-location').value;
 
-        // Guardar en el navegador (LocalStorage)
         localStorage.setItem('hogarSeguroConfig', JSON.stringify(savedData));
 
-        // Actualizar interfaz en tiempo real
         document.getElementById('display-senior-name').innerText = `${savedData.seniorName} (${savedData.age} años)`;
         document.getElementById('display-senior-location').innerText = savedData.location;
         
         modalConfig.classList.remove('active');
-        alert('¡Datos guardados exitosamente en la aplicación!');
+        alert('¡Datos guardados exitosamente!');
       });
 
-      // LÓGICA DEL SIMULADOR IOT
-      const jsonPreview = document.getElementById('json-preview');
-
-      function triggerIoTEvent(type, data, alertMessage) {
-        const payload = {
-          timestamp: new Date().toISOString(),
-          device_id: `IOT_${type.toUpperCase()}_01`,
-          event_type: type,
-          data: data
-        };
-        jsonPreview.innerText = JSON.stringify(payload, null, 2);
-
-        if (alertMessage) {
-          document.getElementById('status-checkin-badge').innerText = "¡ALERTA! 🚨";
-          document.getElementById('status-checkin-badge').className = "badge badge-alert";
-        }
-      }
-
-      document.getElementById('btn-sim-sos')?.addEventListener('click', () => {
-        triggerIoTEvent('sos_button', { location: 'Pulsera SOS', battery: '92%' }, 'Botón SOS presionado');
-        openCallModal('Red Familiar (SOS)');
-      });
-
-      document.getElementById('btn-sim-fall')?.addEventListener('click', () => {
-        triggerIoTEvent('fall_radar', { location: 'Baño Principal', confidence: 0.98 }, 'Caída detectada');
-        document.getElementById('fall-desc').innerText = '⚠️ Caída detectada en Baño';
-        document.getElementById('fall-badge').className = 'badge badge-alert';
-        document.getElementById('fall-badge').innerText = 'ALERTA';
-        openCallModal('Alerta por Caída mmWave');
-      });
-
-      document.getElementById('btn-sim-doorbell')?.addEventListener('click', () => {
-        triggerIoTEvent('doorbell', { visitor: 'Desconocido', snapshot: 'cam_door.jpg' }, 'Timbre activado');
-        document.getElementById('modal-doorbell').classList.add('active');
-      });
-
-      document.getElementById('btn-sim-door')?.addEventListener('click', () => {
-        triggerIoTEvent('door_sensor', { state: 'open', duration_sec: 120 }, 'Puerta abierta');
-        document.getElementById('door-desc').innerText = 'Abierta · Hace 2 min';
-        document.getElementById('door-badge').className = 'badge badge-warning';
-        document.getElementById('door-badge').innerText = 'Abierta';
-      });
-
-      document.getElementById('btn-sim-water')?.addEventListener('click', () => {
-        triggerIoTEvent('water_leak', { location: 'Cocina Bajo Mesón' }, 'Fuga de agua');
-        document.getElementById('water-desc').innerText = '⚠️ Humedad detectada';
-        document.getElementById('water-badge').className = 'badge badge-alert';
-        document.getElementById('water-badge').innerText = 'FUGA';
-      });
-
-      document.getElementById('btn-sim-smoke')?.addEventListener('click', () => {
-        triggerIoTEvent('smoke_detector', { ppm: 450, location: 'Cocina' }, 'Humo detectado');
-        document.getElementById('smoke-desc').innerText = '⚠️ Nivel crítico de humo';
-        document.getElementById('smoke-badge').className = 'badge badge-alert';
-        document.getElementById('smoke-badge').innerText = 'HUMO';
-      });
-
-      document.getElementById('btn-sim-fridge')?.addEventListener('click', () => {
-        const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        triggerIoTEvent('fridge_sensor', { last_open: time }, 'Apertura de refrigerador');
-        document.getElementById('fridge-desc').innerText = `Última apertura: ${time}`;
-      });
-
-      document.getElementById('btn-sim-snooze')?.addEventListener('click', () => {
-        triggerIoTEvent('med_snooze', { med_id: 1, delay_min: 15 }, 'Recordatorio pospuesto');
-        alert('Recordatorio de medicina pospuesto 15 minutos.');
-      });
-
-      // CONTROLES DE LLAMADA
+      // SIMULADOR Y LLAMADAS
       const modalCall = document.getElementById('modal-call');
       function openCallModal(targetName) {
         document.getElementById('call-target-name').innerText = targetName;
@@ -1195,21 +1133,11 @@
       document.addEventListener('click', (e) => {
         if (e.target.closest('.btn-call-contact')) {
           const btn = e.target.closest('.btn-call-contact');
-          const contactName = btn.getAttribute('data-name');
-          openCallModal(contactName);
+          openCallModal(btn.getAttribute('data-name'));
         }
       });
 
-      document.getElementById('btn-unlock-door')?.addEventListener('click', () => {
-        document.getElementById('modal-doorbell').classList.remove('active');
-        alert('Puerta desbloqueada a distancia');
-      });
-
-      document.getElementById('btn-ignore-doorbell')?.addEventListener('click', () => {
-        document.getElementById('modal-doorbell').classList.remove('active');
-      });
-
-      // SELECCIÓN DE CÁMARAS
+      // CAMARAS
       const mainCamFeed = document.getElementById('main-cam-feed');
       const camLabel = document.getElementById('cam-location-label');
 
@@ -1217,12 +1145,10 @@
         mainCamFeed.src = "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80";
         camLabel.innerText = "LIVING PRINCIPAL";
       });
-
       document.getElementById('btn-cam-hall')?.addEventListener('click', () => {
         mainCamFeed.src = "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80";
         camLabel.innerText = "PASILLO DORMITORIOS";
       });
-
       document.getElementById('btn-cam-door')?.addEventListener('click', () => {
         mainCamFeed.src = "https://images.unsplash.com/photo-1558036117-15d82a90b9b1?auto=format&fit=crop&w=600&q=80";
         camLabel.innerText = "ACCESO PRINCIPAL";
