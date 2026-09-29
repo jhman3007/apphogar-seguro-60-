@@ -813,40 +813,52 @@
           </div>
 
           <div class="sensor-list" id="network-container">
-            <div class="sensor-card">
+            <div class="sensor-card" data-id="default-1">
               <div class="sensor-icon-wrapper" style="background: #EFF6FF; color: #2563EB;">👩‍👧</div>
               <div class="sensor-info">
                 <div class="sensor-title">Carolina (Hijo/a)</div>
                 <div class="sensor-desc">+56 9 8765 4321 · Familiar Principal</div>
               </div>
-              <button class="btn-check-med btn-call-contact" data-name="Carolina (Hijo/a)" style="padding: 6px 10px; font-size: 11px; width: auto;">📞 Llamar</button>
+              <div style="display: flex; gap: 4px;">
+                <button class="btn-check-med btn-call-contact" data-name="Carolina (Hijo/a)" style="padding: 6px 8px; font-size: 10px; width: auto;">📞</button>
+                <button class="btn-snooze-med btn-delete-contact" style="padding: 6px 8px; font-size: 10px; background: #FEE2E2; color: #DC2626; border: none;">🗑️</button>
+              </div>
             </div>
 
-            <div class="sensor-card">
+            <div class="sensor-card" data-id="default-2">
               <div class="sensor-icon-wrapper" style="background: #ECFDF5; color: #059669;">🏠</div>
               <div class="sensor-info">
                 <div class="sensor-title">Don Pedro (Vecino)</div>
                 <div class="sensor-desc">+56 9 1234 5678 · Contacto Cercano</div>
               </div>
-              <button class="btn-check-med btn-call-contact" data-name="Don Pedro (Vecino)" style="padding: 6px 10px; font-size: 11px; width: auto; background: #059669;">📞 Llamar</button>
+              <div style="display: flex; gap: 4px;">
+                <button class="btn-check-med btn-call-contact" data-name="Don Pedro (Vecino)" style="padding: 6px 8px; font-size: 10px; width: auto; background: #059669;">📞</button>
+                <button class="btn-snooze-med btn-delete-contact" style="padding: 6px 8px; font-size: 10px; background: #FEE2E2; color: #DC2626; border: none;">🗑️</button>
+              </div>
             </div>
 
-            <div class="sensor-card">
+            <div class="sensor-card" data-id="default-3">
               <div class="sensor-icon-wrapper" style="background: #F3E8FF; color: #9333EA;">🩺</div>
               <div class="sensor-info">
                 <div class="sensor-title">Dr. Roberto Soto (Doctor)</div>
-                <div class="sensor-desc">+56 9 9988 7766 · Centro Médico Peñalolén</div>
+                <div class="sensor-desc">+56 9 9988 7766 · Centro Médico</div>
               </div>
-              <button class="btn-check-med btn-call-contact" data-name="Dr. Roberto Soto (Doctor)" style="padding: 6px 10px; font-size: 11px; width: auto; background: #9333EA;">📞 Llamar</button>
+              <div style="display: flex; gap: 4px;">
+                <button class="btn-check-med btn-call-contact" data-name="Dr. Roberto Soto (Doctor)" style="padding: 6px 8px; font-size: 10px; width: auto; background: #9333EA;">📞</button>
+                <button class="btn-snooze-med btn-delete-contact" style="padding: 6px 8px; font-size: 10px; background: #FEE2E2; color: #DC2626; border: none;">🗑️</button>
+              </div>
             </div>
 
-            <div class="sensor-card">
+            <div class="sensor-card" data-id="default-4">
               <div class="sensor-icon-wrapper" style="background: #FEF3C7; color: #D97706;">🧑‍⚕️</div>
               <div class="sensor-info">
                 <div class="sensor-title">Ana María (Cuidador)</div>
                 <div class="sensor-desc">+56 9 4433 2211 · Turno Mañana</div>
               </div>
-              <button class="btn-check-med btn-call-contact" data-name="Ana María (Cuidador)" style="padding: 6px 10px; font-size: 11px; width: auto; background: #D97706;">📞 Llamar</button>
+              <div style="display: flex; gap: 4px;">
+                <button class="btn-check-med btn-call-contact" data-name="Ana María (Cuidador)" style="padding: 6px 8px; font-size: 10px; width: auto; background: #D97706;">📞</button>
+                <button class="btn-snooze-med btn-delete-contact" style="padding: 6px 8px; font-size: 10px; background: #FEE2E2; color: #DC2626; border: none;">🗑️</button>
+              </div>
             </div>
           </div>
         </section>
@@ -914,7 +926,7 @@
         </div>
       </div>
 
-      <!-- NUEVO MODAL: AGREGAR CONTACTO A RED -->
+      <!-- MODAL AGREGAR CONTACTO A RED -->
       <div class="modal-overlay" id="modal-add-contact">
         <div class="modal-card">
           <h3 style="font-size: 15px; margin-bottom: 10px; text-align: left;">Agregar Persona a la Red</h3>
@@ -1119,34 +1131,47 @@
         const lastname = document.getElementById('contact-lastname').value;
         const phone = document.getElementById('contact-phone').value;
 
-        // Definir ícono según el rol seleccionado
         let icon = "👤";
-        let bgColor = "#EFF6FF";
         let iconColor = "#2563EB";
+        let iconBg = "#EFF6FF";
 
-        if (role === 'Hijo/a') { icon = "👩‍👧"; bgColor = "#EFF6FF"; iconColor = "#2563EB"; }
-        else if (role === 'Doctor') { icon = "🩺"; bgColor = "#F3E8FF"; iconColor = "#9333EA"; }
-        else if (role === 'Cuidador') { icon = "🧑‍⚕️"; bgColor = "#FEF3C7"; iconColor = "#D97706"; }
-        else if (role === 'Vecino') { icon = "🏠"; bgColor = "#ECFDF5"; iconColor = "#059669"; }
-        else if (role === 'Interesado') { icon = "🤝"; bgColor = "#F1F5F9"; iconColor = "#475569"; }
+        if (role === 'Hijo/a') { icon = "👩‍👧"; iconBg = "#EFF6FF"; iconColor = "#2563EB"; }
+        else if (role === 'Doctor') { icon = "🩺"; iconBg = "#F3E8FF"; iconColor = "#9333EA"; }
+        else if (role === 'Cuidador') { icon = "🧑‍⚕️"; iconBg = "#FEF3C7"; iconColor = "#D97706"; }
+        else if (role === 'Vecino') { icon = "🏠"; iconBg = "#ECFDF5"; iconColor = "#059669"; }
+        else if (role === 'Interesado') { icon = "🤝"; iconBg = "#F1F5F9"; iconColor = "#475569"; }
 
         const container = document.getElementById('network-container');
         const newCard = document.createElement('div');
         newCard.className = 'sensor-card';
         const fullName = `${name} ${lastname} (${role})`;
+        
         newCard.innerHTML = `
-          <div class="sensor-icon-wrapper" style="background: ${bgColor}; color: ${iconColor};">${icon}</div>
+          <div class="sensor-icon-wrapper" style="background: ${iconBg}; color: ${iconColor};">${icon}</div>
           <div class="sensor-info">
             <div class="sensor-title">${name} ${lastname}</div>
             <div class="sensor-desc">${phone} · ${role}</div>
           </div>
-          <button class="btn-check-med btn-call-contact" data-name="${fullName}" style="padding: 6px 10px; font-size: 11px; width: auto; background: ${iconColor};">📞 Llamar</button>
+          <div style="display: flex; gap: 4px;">
+            <button class="btn-check-med btn-call-contact" data-name="${fullName}" style="padding: 6px 8px; font-size: 10px; width: auto; background: ${iconColor};">📞</button>
+            <button class="btn-snooze-med btn-delete-contact" style="padding: 6px 8px; font-size: 10px; background: #FEE2E2; color: #DC2626; border: none;">🗑️️</button>
+          </div>
         `;
         container.appendChild(newCard);
 
         modalAddContact.classList.remove('active');
         document.getElementById('form-add-contact').reset();
         alert('¡Persona agregada exitosamente a la red de apoyo!');
+      });
+
+      // ELIMINAR CONTACTO DE LA RED (Delegación de eventos)
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.btn-delete-contact')) {
+          const card = e.target.closest('.sensor-card');
+          if (confirm('¿Estás seguro de eliminar este contacto de la red?')) {
+            card.remove();
+          }
+        }
       });
 
       // BOTÓN ESTOY BIEN
