@@ -109,6 +109,9 @@
     .brand {
       display: flex;
       align-items: center;
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--primary);
     }
 
     .brand-logo-img {
@@ -449,7 +452,7 @@
       cursor: pointer;
       border: none;
       background: transparent;
-      width: 25%;
+      width: 33%;
     }
 
     .nav-item.active {
@@ -652,7 +655,7 @@
       <!-- ENCABEZADO CON LOGO DE IMAGEN -->
       <header class="app-header">
         <div class="brand">
-          <img src="logo.png" alt="Hogar Seguro 60+" class="brand-logo-img">
+          <img src="logo.png" alt="Hogar Seguro 60+" class="brand-logo-img" onerror="this.onerror=null; this.outerHTML='<span>HogarSeguro60+</span>';">
         </div>
         <div class="role-switcher">
           <button class="role-btn active" id="btn-role-senior">Senior</button>
@@ -768,10 +771,9 @@
             </div>
           </div>
 
-          <!-- SENSORES IOT -->
+          <!-- SENSORES IOT (SE ELIMINÓ EL BOTÓN DE CONFIGURAR DE AQUÍ) -->
           <div class="section-title">
             <span>Red de Sensores IoT</span>
-            <span style="font-size: 10px; color: var(--primary); cursor: pointer;" id="btn-open-config">⚙️ Configurar</span>
           </div>
 
           <div class="sensor-list">
@@ -997,7 +999,6 @@
 
   </div>
 
-  <!-- SCRIPT DE FUNCIONALIDAD COMPLETO -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
 
@@ -1042,12 +1043,13 @@
       let currentRole = 'senior';
 
       // 3. RENDERIZAR BARRA DE NAVEGACIÓN INFERIOR
+      // REQUISITO: En modo Senior, el botón "Inicio" fue sustituido por "Configurar" que abre directamente el modal de datos (#modal-config)
       function renderNavBar(role) {
         if (role === 'senior') {
           mainNavBar.innerHTML = `
-            <button class="nav-item active" data-target="panel-senior">
-              <icon>🏠</icon>
-              <span>Inicio</span>
+            <button class="nav-item" id="nav-btn-config">
+              <icon>⚙️</icon>
+              <span>Configurar</span>
             </button>
             <button class="nav-item" data-target="panel-medications">
               <icon>💊</icon>
@@ -1089,7 +1091,13 @@
 
       function attachNavEvents() {
         document.querySelectorAll('.nav-bar .nav-item').forEach(btn => {
-          btn.addEventListener('click', () => switchPanel(btn.dataset.target));
+          btn.addEventListener('click', () => {
+            if (btn.id === 'nav-btn-config') {
+              modalConfig.classList.add('active');
+            } else if (btn.dataset.target) {
+              switchPanel(btn.dataset.target);
+            }
+          });
         });
       }
 
@@ -1150,7 +1158,6 @@
       });
 
       // 6. CONTROL DE CONFIGURACIÓN DEL RESIDENTE
-      document.getElementById('btn-open-config').addEventListener('click', () => modalConfig.classList.add('active'));
       document.getElementById('btn-close-config').addEventListener('click', () => modalConfig.classList.remove('active'));
 
       document.getElementById('form-config').addEventListener('submit', (e) => {
