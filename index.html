@@ -44,6 +44,7 @@
       padding: 16px;
     }
 
+    /* CONTENEDOR PRINCIPAL RESPONSIVO */
     .app-workspace {
       display: flex;
       flex-wrap: wrap;
@@ -54,6 +55,7 @@
       justify-content: center;
     }
 
+    /* MARCO DEL TELÉFONO */
     .phone-container {
       width: 100%;
       max-width: 390px;
@@ -68,6 +70,7 @@
       border: 4px solid #334155;
     }
 
+    /* BARRA DE ESTADO Y DYNAMIC ISLAND */
     .status-bar {
       height: 40px;
       background: transparent;
@@ -93,6 +96,7 @@
       z-index: 101;
     }
 
+    /* ENCABEZADO Y SELECTOR DE ROL */
     .app-header {
       padding: 8px 14px;
       background: var(--surface);
@@ -114,6 +118,7 @@
       display: block;
     }
 
+    /* INTERRUPTOR MODO SENIOR / FAMILIA */
     .role-switcher {
       background: #F1F5F9;
       padding: 3px;
@@ -141,6 +146,7 @@
       box-shadow: var(--shadow-sm);
     }
 
+    /* ÁREA DE CONTENIDO PRINCIPAL */
     .app-body {
       flex: 1;
       overflow-y: auto;
@@ -159,6 +165,7 @@
       border-radius: 4px;
     }
 
+    /* VISTAS DUALES */
     .view-panel {
       display: none;
       flex-direction: column;
@@ -169,6 +176,7 @@
       display: flex;
     }
 
+    /* MODO SENIOR - DISEÑO ADAPTADO */
     .senior-card {
       background: var(--surface);
       border-radius: var(--radius-lg);
@@ -233,6 +241,7 @@
       font-size: 24px;
     }
 
+    /* BANNER DE MEDICAMENTOS */
     .medication-banner {
       background: #EFF6FF;
       border: 2px solid #BFDBFE;
@@ -287,6 +296,7 @@
       text-align: center;
     }
 
+    /* MODO FAMILIA - DASHBOARD COMPLETO */
     .status-summary-card {
       background: linear-gradient(135deg, #1E293B, #0F172A);
       color: white;
@@ -417,6 +427,7 @@
       color: var(--text-muted);
     }
 
+    /* BARRA DE NAVEGACIÓN INFERIOR */
     .nav-bar {
       height: 60px;
       background: var(--surface);
@@ -449,6 +460,7 @@
       font-size: 18px;
     }
 
+    /* SIMULADOR IOT RESPONSIVO */
     .iot-simulator {
       flex: 1;
       max-width: 380px;
@@ -534,6 +546,7 @@
       border: 1px solid #1E293B;
     }
 
+    /* MODAL GENERAL */
     .modal-overlay {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -625,13 +638,18 @@
 
   <div class="app-workspace">
 
+    <!-- TELÉFONO - PROTOTIPO MÓVIL INTERACTIVO -->
     <div class="phone-container">
+      
       <div class="dynamic-island"></div>
+
+      <!-- BARRA DE ESTADO DEL SISTEMA -->
       <div class="status-bar">
         <span>09:41</span>
         <span style="display:flex; gap: 4px;">📶 🔋 98%</span>
       </div>
 
+      <!-- ENCABEZADO CON LOGO DE IMAGEN -->
       <header class="app-header">
         <div class="brand">
           <img src="logo.png" alt="Hogar Seguro 60+" class="brand-logo-img">
@@ -642,8 +660,13 @@
         </div>
       </header>
 
+      <!-- CUERPO DE LA APLICACIÓN -->
       <main class="app-body">
+
+        <!-- ================= MODO SENIOR (INICIO) ================= -->
         <section class="view-panel active" id="panel-senior">
+          
+          <!-- BOTÓN DE EMERGENCIA (AYUDA) -->
           <div class="senior-card" style="background: #FEF2F2; border-color: #FECACA;">
             <p style="font-size: 11px; font-weight: 700; color: #991B1B; margin-bottom: 4px;">¿NECESITAS AYUDA INMEDIATA?</p>
             <button class="senior-sos-btn" id="btn-senior-sos">
@@ -652,6 +675,7 @@
             </button>
           </div>
 
+          <!-- BOTÓN ESTOY BIEN -->
           <div class="senior-card" style="background: #ECFDF5; border-color: #A7F3D0; padding: 10px;">
             <button class="senior-sos-btn" id="btn-senior-status" style="height: 56px; font-size: 16px; background: linear-gradient(135deg, #10B981, #059669); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);">
               🟢 ESTOY BIEN
@@ -659,6 +683,7 @@
             </button>
           </div>
 
+          <!-- BANNER DE MEDICAMENTOS RÁPIDO -->
           <div class="medication-banner">
             <div class="med-info">
               <h4 id="senior-med-title">Losartán 50mg</h4>
@@ -680,8 +705,10 @@
               Ver Timbre
             </button>
           </div>
+
         </section>
 
+        <!-- ================= VISTA MEDICAMENTOS ================= -->
         <section class="view-panel" id="panel-medications">
           <div class="section-title">
             <span>Control de Medicamentos</span>
@@ -709,7 +736,10 @@
           </div>
         </section>
 
+        <!-- ================= MODO FAMILIA ================= -->
         <section class="view-panel" id="panel-family">
+
+          <!-- FICHA DE ESTADO GENERAL -->
           <div class="status-summary-card">
             <div class="status-header">
               <div class="user-profile">
@@ -738,6 +768,7 @@
             </div>
           </div>
 
+          <!-- SENSORES IOT -->
           <div class="section-title">
             <span>Red de Sensores IoT</span>
             <span style="font-size: 10px; color: var(--primary); cursor: pointer;" id="btn-open-config">⚙️ Configurar</span>
@@ -771,8 +802,10 @@
               <span class="badge badge-success" id="door-badge">Cerrada</span>
             </div>
           </div>
+
         </section>
 
+        <!-- ================= VISTA RED DE APOYO ================= -->
         <section class="view-panel" id="panel-network">
           <div class="section-title">
             <span>Red de Apoyo & Contactos</span>
@@ -803,29 +836,41 @@
                 <button class="btn-snooze-med btn-delete-contact" style="padding: 6px 8px; font-size: 10px; background: #FEE2E2; color: #DC2626; border: none;">🗑️</button>
               </div>
             </div>
+
+            <div class="sensor-card" data-id="default-3">
+              <div class="sensor-icon-wrapper" style="background: #F3E8FF; color: #9333EA;">🩺</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Dr. Roberto Soto (Doctor)</div>
+                <div class="sensor-desc">+56 9 9988 7766 · Centro Médico</div>
+              </div>
+              <div style="display: flex; gap: 4px;">
+                <button class="btn-check-med btn-call-contact" data-name="Dr. Roberto Soto (Doctor)" style="padding: 6px 8px; font-size: 10px; width: auto; background: #9333EA;">📞</button>
+                <button class="btn-snooze-med btn-delete-contact" style="padding: 6px 8px; font-size: 10px; background: #FEE2E2; color: #DC2626; border: none;">🗑️</button>
+              </div>
+            </div>
+
+            <div class="sensor-card" data-id="default-4">
+              <div class="sensor-icon-wrapper" style="background: #FEF3C7; color: #D97706;">🧑‍⚕️</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Ana María (Cuidador)</div>
+                <div class="sensor-desc">+56 9 4433 2211 · Turno Mañana</div>
+              </div>
+              <div style="display: flex; gap: 4px;">
+                <button class="btn-check-med btn-call-contact" data-name="Ana María (Cuidador)" style="padding: 6px 8px; font-size: 10px; width: auto; background: #D97706;">📞</button>
+                <button class="btn-snooze-med btn-delete-contact" style="padding: 6px 8px; font-size: 10px; background: #FEE2E2; color: #DC2626; border: none;">🗑️</button>
+              </div>
+            </div>
           </div>
         </section>
+
       </main>
 
+      <!-- BARRA DE NAVEGACIÓN INFERIOR DINÁMICA -->
       <nav class="nav-bar" id="main-nav-bar">
-        <button class="nav-item active" data-target="panel-senior">
-          <icon>🏠</icon>
-          <span>Inicio</span>
-        </button>
-        <button class="nav-item" data-target="panel-medications">
-          <icon>💊</icon>
-          <span>Medicina</span>
-        </button>
-        <button class="nav-item" data-target="panel-family">
-          <icon>📊</icon>
-          <span>Familia</span>
-        </button>
-        <button class="nav-item" data-target="panel-network">
-          <icon>👥</icon>
-          <span>Red</span>
-        </button>
+        <!-- Se llena con JS -->
       </nav>
 
+      <!-- MODAL TELEFÓNICO -->
       <div class="modal-overlay" id="modal-call">
         <div class="modal-card">
           <div class="call-avatar">📞</div>
@@ -835,6 +880,7 @@
         </div>
       </div>
 
+      <!-- MODAL CONFIGURACIÓN RESIDENTE -->
       <div class="modal-overlay" id="modal-config">
         <div class="modal-card">
           <h3 style="font-size: 15px; margin-bottom: 10px; text-align: left;">Configurar Adulto Mayor</h3>
@@ -858,8 +904,66 @@
           </form>
         </div>
       </div>
+
+      <!-- MODAL AGREGAR MEDICAMENTO -->
+      <div class="modal-overlay" id="modal-add-med">
+        <div class="modal-card">
+          <h3 style="font-size: 15px; margin-bottom: 10px; text-align: left;">Nuevo Medicamento</h3>
+          <form class="config-form" id="form-add-med">
+            <div class="form-group">
+              <label>Nombre y Dosis</label>
+              <input type="text" id="new-med-name" placeholder="Ej: Paracetamol 500mg" required>
+            </div>
+            <div class="form-group">
+              <label>Hora de Toma</label>
+              <input type="text" id="new-med-time" placeholder="Ej: 04:00 PM" required>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 10px;">
+              <button type="submit" class="btn-check-med" style="flex: 1;">Agregar</button>
+              <button type="button" class="btn-check-med" id="btn-close-add-med" style="flex: 1; background: #64748B;">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- MODAL AGREGAR CONTACTO A RED -->
+      <div class="modal-overlay" id="modal-add-contact">
+        <div class="modal-card">
+          <h3 style="font-size: 15px; margin-bottom: 10px; text-align: left;">Agregar Persona a la Red</h3>
+          <form class="config-form" id="form-add-contact">
+            <div class="form-group">
+              <label>Tipo de Vínculo</label>
+              <select id="contact-role" required>
+                <option value="Hijo/a">Hijo/a</option>
+                <option value="Doctor">Doctor</option>
+                <option value="Cuidador">Cuidador</option>
+                <option value="Vecino">Vecino</option>
+                <option value="Interesado">Interesado</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Nombre</label>
+              <input type="text" id="contact-name" placeholder="Ej: Juan" required>
+            </div>
+            <div class="form-group">
+              <label>Apellido</label>
+              <input type="text" id="contact-lastname" placeholder="Ej: Pérez" required>
+            </div>
+            <div class="form-group">
+              <label>Número de Teléfono</label>
+              <input type="text" id="contact-phone" placeholder="Ej: +56 9 1122 3344" required>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 10px;">
+              <button type="submit" class="btn-check-med" style="flex: 1;">Guardar</button>
+              <button type="button" class="btn-check-med" id="btn-close-add-contact" style="flex: 1; background: #64748B;">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
     </div>
 
+    <!-- PANEL FLOTANTE - SIMULADOR IOT -->
     <div class="iot-simulator">
       <div class="sim-header">
         <div class="sim-title">
@@ -883,97 +987,237 @@
 
       <div class="sim-group-title">Payload JSON Transmitido</div>
       <div class="json-preview" id="json-preview">
+// Esperando interacción del simulador...
 {
   "status": "connected",
   "gateway_id": "GW_HOGAR_SEGURO_001"
 }
       </div>
     </div>
+
   </div>
 
+  <!-- SCRIPT DE FUNCIONALIDAD -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+
+      // CARGAR DATOS PERSISTENTES
+      let savedData = JSON.parse(localStorage.getItem('hogarSeguroConfig')) || {
+        seniorName: "Sra. Marta",
+        age: 82,
+        location: "Peñalolén, Santiago"
+      };
+
+      document.getElementById('display-senior-name').innerText = `${savedData.seniorName} (${savedData.age} años)`;
+      document.getElementById('display-senior-location').innerText = savedData.location;
+      document.getElementById('cfg-name').value = savedData.seniorName;
+      document.getElementById('cfg-age').value = savedData.age;
+      document.getElementById('cfg-location').value = savedData.location;
+
+      // NAVEGACIÓN ENTRE PANELES
       const btnRoleSenior = document.getElementById('btn-role-senior');
       const btnRoleFamily = document.getElementById('btn-role-family');
-      
+      const panelSenior = document.getElementById('panel-senior');
+      const panelMedications = document.getElementById('panel-medications');
+      const panelFamily = document.getElementById('panel-family');
+      const panelNetwork = document.getElementById('panel-network');
+      const navBar = document.getElementById('main-nav-bar');
+
+      function switchPanel(targetPanel) {
+        panelSenior.classList.remove('active');
+        panelMedications.classList.remove('active');
+        panelFamily.classList.remove('active');
+        panelNetwork.classList.remove('active');
+        targetPanel.classList.add('active');
+      }
+
+      // RENDERIZAR BARRA INFERIOR SEGÚN EL ROL
+      function renderNavBar(role) {
+        if (role === 'senior') {
+          navBar.innerHTML = `
+            <button class="nav-item active" id="nav-btn-home" style="width: 100%;"><icon>🏠</icon>Inicio</button>
+          `;
+          document.getElementById('nav-btn-home').addEventListener('click', (e) => { setActiveNav(e.currentTarget); switchPanel(panelSenior); });
+        } else {
+          navBar.innerHTML = `
+            <button class="nav-item active" id="nav-fam-home"><icon>📊</icon>Inicio</button>
+            <button class="nav-item" id="nav-fam-meds"><icon>💊</icon>Medicamentos</button>
+            <button class="nav-item" id="nav-fam-network"><icon>👥</icon>Red</button>
+          `;
+
+          document.getElementById('nav-fam-home').addEventListener('click', (e) => { setActiveNav(e.currentTarget); switchPanel(panelFamily); });
+          document.getElementById('nav-fam-meds').addEventListener('click', (e) => { setActiveNav(e.currentTarget); switchPanel(panelMedications); });
+          document.getElementById('nav-fam-network').addEventListener('click', (e) => { setActiveNav(e.currentTarget); switchPanel(panelNetwork); });
+        }
+      }
+
+      function setActiveNav(btn) {
+        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+
+      // Selector de rol superior (Senior / Familia)
       btnRoleSenior.addEventListener('click', () => {
         btnRoleSenior.classList.add('active');
         btnRoleFamily.classList.remove('active');
-        switchPanel('panel-senior');
+        renderNavBar('senior');
+        switchPanel(panelSenior);
       });
 
       btnRoleFamily.addEventListener('click', () => {
         btnRoleFamily.classList.add('active');
         btnRoleSenior.classList.remove('active');
-        switchPanel('panel-family');
+        renderNavBar('family');
+        switchPanel(panelFamily);
       });
 
-      const navItems = document.querySelectorAll('.nav-item');
-      navItems.forEach(item => {
-        item.addEventListener('click', () => {
-          navItems.forEach(i => i.classList.remove('active'));
-          item.classList.add('active');
-          const target = item.getAttribute('data-target');
-          switchPanel(target);
-        });
+      // Inicializar barra por defecto en Modo Senior
+      renderNavBar('senior');
+
+      // ACCIONES DE MEDICAMENTOS (EN PRIMERA PÁGINA)
+      const btnTakeMed = document.getElementById('btn-take-med');
+      const btnSnoozeMed = document.getElementById('btn-snooze-med');
+      const nextDoseTime = document.getElementById('next-dose-time');
+
+      btnTakeMed.addEventListener('click', () => {
+        btnTakeMed.innerText = "✓ Medicamento Tomado";
+        btnTakeMed.style.background = "#10B981";
+        document.getElementById('metric-meds').innerText = "2/2";
+        alert('¡Registrado! Notificación enviada a los familiares y al cuidador: "Losartán tomado a tiempo".');
       });
 
-      function switchPanel(panelId) {
-        document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
-        document.getElementById(panelId).classList.add('active');
-      }
+      btnSnoozeMed.addEventListener('click', () => {
+        nextDoseTime.innerText = "12:15 PM";
+        alert('Recordatorio pospuesto 15 minutos. Se ha enviado un aviso de retraso preventivo al cuidador y familiares.');
+      });
 
+      // MODAL AGREGAR MEDICAMENTO
+      const modalAddMed = document.getElementById('modal-add-med');
+      document.getElementById('btn-open-add-med').addEventListener('click', () => modalAddMed.classList.add('active'));
+      document.getElementById('btn-close-add-med').addEventListener('click', () => modalAddMed.classList.remove('active'));
+
+      document.getElementById('form-add-med').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const medName = document.getElementById('new-med-name').value;
+        const medTime = document.getElementById('new-med-time').value;
+
+        const container = document.getElementById('medicaments-container');
+        const newCard = document.createElement('div');
+        newCard.className = 'sensor-card';
+        newCard.innerHTML = `
+          <div class="sensor-icon-wrapper" style="background: #EFF6FF; color: #2563EB;">💊</div>
+          <div class="sensor-info">
+            <div class="sensor-title">${medName}</div>
+            <div class="sensor-desc">Próxima toma: ${medTime}</div>
+          </div>
+          <span class="badge badge-warning">Pendiente</span>
+        `;
+        container.appendChild(newCard);
+
+        modalAddMed.classList.remove('active');
+        document.getElementById('form-add-med').reset();
+        alert('¡Medicamento agregado exitosamente a la lista!');
+      });
+
+      // MODAL AGREGAR CONTACTO A RED
+      const modalAddContact = document.getElementById('modal-add-contact');
+      document.getElementById('btn-open-add-contact').addEventListener('click', () => modalAddContact.classList.add('active'));
+      document.getElementById('btn-close-add-contact').addEventListener('click', () => modalAddContact.classList.remove('active'));
+
+      document.getElementById('form-add-contact').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const role = document.getElementById('contact-role').value;
+        const name = document.getElementById('contact-name').value;
+        const lastname = document.getElementById('contact-lastname').value;
+        const phone = document.getElementById('contact-phone').value;
+
+        let icon = "👤";
+        let iconColor = "#2563EB";
+        let iconBg = "#EFF6FF";
+
+        if (role === 'Hijo/a') { icon = "👩‍👧"; iconBg = "#EFF6FF"; iconColor = "#2563EB"; }
+        else if (role === 'Doctor') { icon = "🩺"; iconBg = "#F3E8FF"; iconColor = "#9333EA"; }
+        else if (role === 'Cuidador') { icon = "🧑‍⚕️"; iconBg = "#FEF3C7"; iconColor = "#D97706"; }
+        else if (role === 'Vecino') { icon = "🏠"; iconBg = "#ECFDF5"; iconColor = "#059669"; }
+        else if (role === 'Interesado') { icon = "🤝"; iconBg = "#F1F5F9"; iconColor = "#475569"; }
+
+        const container = document.getElementById('network-container');
+        const newCard = document.createElement('div');
+        newCard.className = 'sensor-card';
+        const fullName = `${name} ${lastname} (${role})`;
+        
+        newCard.innerHTML = `
+          <div class="sensor-icon-wrapper" style="background: ${iconBg}; color: ${iconColor};">${icon}</div>
+          <div class="sensor-info">
+            <div class="sensor-title">${name} ${lastname}</div>
+            <div class="sensor-desc">${phone} · ${role}</div>
+          </div>
+          <div style="display: flex; gap: 4px;">
+            <button class="btn-check-med btn-call-contact" data-name="${fullName}" style="padding: 6px 8px; font-size: 10px; width: auto; background: ${iconColor};">📞</button>
+            <button class="btn-snooze-med btn-delete-contact" style="padding: 6px 8px; font-size: 10px; background: #FEE2E2; color: #DC2626; border: none;">🗑️️</button>
+          </div>
+        `;
+        container.appendChild(newCard);
+
+        modalAddContact.classList.remove('active');
+        document.getElementById('form-add-contact').reset();
+        alert('¡Persona agregada exitosamente a la red de apoyo!');
+      });
+
+      // ELIMINAR CONTACTO DE LA RED (Delegación de eventos)
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.btn-delete-contact')) {
+          const card = e.target.closest('.sensor-card');
+          if (confirm('¿Estás seguro de eliminar este contacto de la red?')) {
+            card.remove();
+          }
+        }
+      });
+
+      // BOTÓN ESTOY BIEN
+      document.getElementById('btn-senior-status').addEventListener('click', () => {
+        document.getElementById('status-checkin-badge').innerText = "✓ Seguro (Reportado)";
+        document.getElementById('status-checkin-badge').className = "badge badge-success";
+        alert('¡Reporte enviado! La familia y el cuidador han sido notificados de que te encuentras bien.');
+      });
+
+      // CONFIGURACIÓN (LocalStorage)
+      const modalConfig = document.getElementById('modal-config');
+      document.getElementById('btn-open-config').addEventListener('click', () => modalConfig.classList.add('active'));
+      document.getElementById('btn-close-config').addEventListener('click', () => modalConfig.classList.remove('active'));
+
+      document.getElementById('form-config').addEventListener('submit', (e) => {
+        e.preventDefault();
+        savedData.seniorName = document.getElementById('cfg-name').value;
+        savedData.age = document.getElementById('cfg-age').value;
+        savedData.location = document.getElementById('cfg-location').value;
+
+        localStorage.setItem('hogarSeguroConfig', JSON.stringify(savedData));
+
+        document.getElementById('display-senior-name').innerText = `${savedData.seniorName} (${savedData.age} años)`;
+        document.getElementById('display-senior-location').innerText = savedData.location;
+        
+        modalConfig.classList.remove('active');
+        alert('¡Datos guardados exitosamente!');
+      });
+
+      // SIMULADOR Y LLAMADAS
       const modalCall = document.getElementById('modal-call');
-      const callTargetName = document.getElementById('call-target-name');
-      
-      document.getElementById('btn-senior-sos').addEventListener('click', () => {
-        callTargetName.innerText = "Red Familiar (SOS Alerta)";
-        modalCall.classList.add("active");
-        updateJsonPreview({ event: "SOS_PRESSED", source: "Senior Panic Button" });
-      });
-
-      document.getElementById('btn-end-call').addEventListener('click', () => {
-        modalCall.classList.remove("active");
-      });
-
-      function updateJsonPreview(data) {
-        const payload = {
-          timestamp: new Date().toISOString(),
-          gateway_id: "GW_HOGAR_SEGURO_001",
-          ...data
-        };
-        document.getElementById('json-preview').innerText = JSON.stringify(payload, null, 2);
+      function openCallModal(targetName) {
+        document.getElementById('call-target-name').innerText = targetName;
+        modalCall.classList.add('active');
       }
 
-      document.getElementById('btn-sim-sos').addEventListener('click', () => {
-        callTargetName.innerText = "🚨 Alerta SOS Inyectada";
-        modalCall.classList.add("active");
-        updateJsonPreview({ sensor: "panic_button", state: "TRIGGERED", priority: "HIGH" });
+      document.getElementById('btn-end-call')?.addEventListener('click', () => modalCall.classList.remove('active'));
+      document.getElementById('btn-senior-sos')?.addEventListener('click', () => openCallModal('Red Familiar (SOS)'));
+
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.btn-call-contact')) {
+          const btn = e.target.closest('.btn-call-contact');
+          openCallModal(btn.getAttribute('data-name'));
+        }
       });
 
-      document.getElementById('btn-sim-fall').addEventListener('click', () => {
-        document.getElementById('fall-desc').innerText = "Baño Principal · ¡Caída Detectada!";
-        document.getElementById('fall-badge').className = "badge badge-alert";
-        document.getElementById('fall-badge').innerText = "¡ALERTA!";
-        updateJsonPreview({ sensor: "mmWave_radar", location: "bathroom", event: "FALL_DETECTED" });
-      });
-
-      document.getElementById('btn-sim-door').addEventListener('click', () => {
-        document.getElementById('door-desc').innerText = "Abierta · Posible salida no autorizada";
-        document.getElementById('door-badge').className = "badge badge-warning";
-        document.getElementById('door-badge').innerText = "Abierta";
-        updateJsonPreview({ sensor: "door_contact", status: "OPEN" });
-      });
-
-      document.getElementById('btn-sim-water').addEventListener('click', () => {
-        updateJsonPreview({ sensor: "water_leak", location: "utility_room", status: "FLOOD_WARNING" });
-        alert("⚠️ Alerta Simulada: Fuga de agua detectada en lavadero.");
-      });
-
-      document.getElementById('btn-sim-fridge').addEventListener('click', () => {
-        document.getElementById('fridge-desc').innerText = "Última apertura: Hace un momento";
-        updateJsonPreview({ sensor: "refrigerator_contact", status: "OPEN_ACTIVITY_OK" });
-      });
     });
   </script>
 </body>
