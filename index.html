@@ -743,7 +743,7 @@
           <div class="status-summary-card">
             <div class="status-header">
               <div class="user-profile">
-                <div class="avatar">M</div>
+                <div class="avatar" id="avatar-initial">M</div>
                 <div>
                   <h3 style="font-size: 15px; font-weight: 800;" id="display-senior-name">Sra. Marta (82 años)</h3>
                   <p style="font-size: 10px; color: #94A3B8;" id="display-senior-location">Peñalolén, Santiago</p>
@@ -850,7 +850,7 @@
             </div>
 
             <div class="sensor-card" data-id="default-4">
-              <div class="sensor-icon-wrapper" style="background: #FEF3C7; color: #D97706;">🧑‍⚕️</div>
+              <div class="sensor-icon-wrapper" style="background: #FEF3C7; color: #D97706;">🧑‍‍⚕️</div>
               <div class="sensor-info">
                 <div class="sensor-title">Ana María (Cuidador)</div>
                 <div class="sensor-desc">+56 9 4433 2211 · Turno Mañana</div>
@@ -867,7 +867,7 @@
 
       <!-- BARRA DE NAVEGACIÓN INFERIOR DINÁMICA -->
       <nav class="nav-bar" id="main-nav-bar">
-        <!-- Se llena con JS -->
+        <!-- Se llena dinámicamente según el rol -->
       </nav>
 
       <!-- MODAL TELEFÓNICO -->
@@ -997,192 +997,159 @@
 
   </div>
 
-  <!-- SCRIPT DE FUNCIONALIDAD -->
+  <!-- SCRIPT DE FUNCIONALIDAD COMPLETO -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-      // CARGAR DATOS PERSISTENTES
+      // 1. PERSISTENCIA DE DATOS Y CONFIGURACIÓN INICIAL
       let savedData = JSON.parse(localStorage.getItem('hogarSeguroConfig')) || {
         seniorName: "Sra. Marta",
         age: 82,
         location: "Peñalolén, Santiago"
       };
 
-      document.getElementById('display-senior-name').innerText = `${savedData.seniorName} (${savedData.age} años)`;
-      document.getElementById('display-senior-location').innerText = savedData.location;
-      document.getElementById('cfg-name').value = savedData.seniorName;
-      document.getElementById('cfg-age').value = savedData.age;
-      document.getElementById('cfg-location').value = savedData.location;
+      function updateProfileDisplay() {
+        document.getElementById('display-senior-name').innerText = `${savedData.seniorName} (${savedData.age} años)`;
+        document.getElementById('display-senior-location').innerText = savedData.location;
+        document.getElementById('cfg-name').value = savedData.seniorName;
+        document.getElementById('cfg-age').value = savedData.age;
+        document.getElementById('cfg-location').value = savedData.location;
+        
+        const avatar = document.getElementById('avatar-initial');
+        if (avatar && savedData.seniorName) {
+          avatar.innerText = savedData.seniorName.replace(/^Sra\.\s*|^Sr\.\s*/i, '').charAt(0).toUpperCase() || 'M';
+        }
+      }
 
-      // NAVEGACIÓN ENTRE PANELES
+      updateProfileDisplay();
+
+      // 2. REFERENCIAS A ELEMENTOS DEL DOM
       const btnRoleSenior = document.getElementById('btn-role-senior');
       const btnRoleFamily = document.getElementById('btn-role-family');
+      
       const panelSenior = document.getElementById('panel-senior');
       const panelMedications = document.getElementById('panel-medications');
       const panelFamily = document.getElementById('panel-family');
       const panelNetwork = document.getElementById('panel-network');
-      const navBar = document.getElementById('main-nav-bar');
+      const mainNavBar = document.getElementById('main-nav-bar');
 
-      function switchPanel(targetPanel) {
-        panelSenior.classList.remove('active');
-        panelMedications.classList.remove('active');
-        panelFamily.classList.remove('active');
-        panelNetwork.classList.remove('active');
-        targetPanel.classList.add('active');
-      }
+      const modalCall = document.getElementById('modal-call');
+      const modalConfig = document.getElementById('modal-config');
+      const modalAddMed = document.getElementById('modal-add-med');
+      const modalAddContact = document.getElementById('modal-add-contact');
+      const jsonPreview = document.getElementById('json-preview');
 
-      // RENDERIZAR BARRA INFERIOR SEGÚN EL ROL
+      let currentRole = 'senior';
+
+      // 3. RENDERIZAR BARRA DE NAVEGACIÓN INFERIOR
       function renderNavBar(role) {
         if (role === 'senior') {
-          navBar.innerHTML = `
-            <button class="nav-item active" id="nav-btn-home" style="width: 100%;"><icon>🏠</icon>Inicio</button>
+          mainNavBar.innerHTML = `
+            <button class="nav-item active" data-target="panel-senior">
+              <icon>🏠</icon>
+              <span>Inicio</span>
+            </button>
+            <button class="nav-item" data-target="panel-medications">
+              <icon>💊</icon>
+              <span>Remedios</span>
+            </button>
+            <button class="nav-item" data-target="panel-network">
+              <icon>📞</icon>
+              <span>Contactos</span>
+            </button>
           `;
-          document.getElementById('nav-btn-home').addEventListener('click', (e) => { setActiveNav(e.currentTarget); switchPanel(panelSenior); });
         } else {
-          navBar.innerHTML = `
-            <button class="nav-item active" id="nav-fam-home"><icon>📊</icon>Inicio</button>
-            <button class="nav-item" id="nav-fam-meds"><icon>💊</icon>Medicamentos</button>
-            <button class="nav-item" id="nav-fam-network"><icon>👥</icon>Red</button>
+          mainNavBar.innerHTML = `
+            <button class="nav-item active" data-target="panel-family">
+              <icon>📊</icon>
+              <span>Estado</span>
+            </button>
+            <button class="nav-item" data-target="panel-medications">
+              <icon>💊</icon>
+              <span>Remedios</span>
+            </button>
+            <button class="nav-item" data-target="panel-network">
+              <icon>👥</icon>
+              <span>Red Apoyo</span>
+            </button>
           `;
-
-          document.getElementById('nav-fam-home').addEventListener('click', (e) => { setActiveNav(e.currentTarget); switchPanel(panelFamily); });
-          document.getElementById('nav-fam-meds').addEventListener('click', (e) => { setActiveNav(e.currentTarget); switchPanel(panelMedications); });
-          document.getElementById('nav-fam-network').addEventListener('click', (e) => { setActiveNav(e.currentTarget); switchPanel(panelNetwork); });
         }
+        attachNavEvents();
       }
 
-      function setActiveNav(btn) {
-        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+      function switchPanel(panelId) {
+        document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
+        const targetPanel = document.getElementById(panelId);
+        if (targetPanel) targetPanel.classList.add('active');
+
+        document.querySelectorAll('.nav-bar .nav-item').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.target === panelId);
+        });
       }
 
-      // Selector de rol superior (Senior / Familia)
+      function attachNavEvents() {
+        document.querySelectorAll('.nav-bar .nav-item').forEach(btn => {
+          btn.addEventListener('click', () => switchPanel(btn.dataset.target));
+        });
+      }
+
+      // 4. CONMUTACIÓN DE ROLES (SENIOR / FAMILIA)
       btnRoleSenior.addEventListener('click', () => {
+        currentRole = 'senior';
         btnRoleSenior.classList.add('active');
         btnRoleFamily.classList.remove('active');
         renderNavBar('senior');
-        switchPanel(panelSenior);
+        switchPanel('panel-senior');
       });
 
       btnRoleFamily.addEventListener('click', () => {
+        currentRole = 'family';
         btnRoleFamily.classList.add('active');
         btnRoleSenior.classList.remove('active');
         renderNavBar('family');
-        switchPanel(panelFamily);
+        switchPanel('panel-family');
       });
 
-      // Inicializar barra por defecto en Modo Senior
       renderNavBar('senior');
 
-      // ACCIONES DE MEDICAMENTOS (EN PRIMERA PÁGINA)
-      const btnTakeMed = document.getElementById('btn-take-med');
-      const btnSnoozeMed = document.getElementById('btn-snooze-med');
-      const nextDoseTime = document.getElementById('next-dose-time');
+      // 5. CONTROL DE LLAMADAS Y MODALES
+      function triggerCall(contactName) {
+        document.getElementById('call-target-name').innerText = contactName;
+        modalCall.classList.add('active');
+      }
 
-      btnTakeMed.addEventListener('click', () => {
-        btnTakeMed.innerText = "✓ Medicamento Tomado";
-        btnTakeMed.style.background = "#10B981";
-        document.getElementById('metric-meds').innerText = "2/2";
-        alert('¡Registrado! Notificación enviada a los familiares y al cuidador: "Losartán tomado a tiempo".');
+      document.getElementById('btn-end-call').addEventListener('click', () => {
+        modalCall.classList.remove('active');
       });
 
-      btnSnoozeMed.addEventListener('click', () => {
-        nextDoseTime.innerText = "12:15 PM";
-        alert('Recordatorio pospuesto 15 minutos. Se ha enviado un aviso de retraso preventivo al cuidador y familiares.');
+      document.getElementById('btn-senior-sos').addEventListener('click', () => triggerCall('Central SOS & Familia'));
+      document.getElementById('btn-senior-door').addEventListener('click', () => triggerCall('Cámara Timbre Entrada'));
+
+      document.getElementById('btn-senior-status').addEventListener('click', () => {
+        document.getElementById('status-checkin-badge').className = "badge badge-success";
+        document.getElementById('status-checkin-badge').innerText = "✓ Confirmado";
+        updateJSON({ event: "MANUAL_CHECKIN", status: "OK", timestamp: new Date().toISOString() });
+        alert('¡Reporte enviado! Tu familia sabe que estás bien.');
       });
 
-      // MODAL AGREGAR MEDICAMENTO
-      const modalAddMed = document.getElementById('modal-add-med');
-      document.getElementById('btn-open-add-med').addEventListener('click', () => modalAddMed.classList.add('active'));
-      document.getElementById('btn-close-add-med').addEventListener('click', () => modalAddMed.classList.remove('active'));
+      // Delegate para botones de llamada dinámicos
+      document.body.addEventListener('click', (e) => {
+        const callBtn = e.target.closest('.btn-call-contact');
+        if (callBtn) {
+          const name = callBtn.dataset.name || 'Contacto de Emergencia';
+          triggerCall(name);
+        }
 
-      document.getElementById('form-add-med').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const medName = document.getElementById('new-med-name').value;
-        const medTime = document.getElementById('new-med-time').value;
-
-        const container = document.getElementById('medicaments-container');
-        const newCard = document.createElement('div');
-        newCard.className = 'sensor-card';
-        newCard.innerHTML = `
-          <div class="sensor-icon-wrapper" style="background: #EFF6FF; color: #2563EB;">💊</div>
-          <div class="sensor-info">
-            <div class="sensor-title">${medName}</div>
-            <div class="sensor-desc">Próxima toma: ${medTime}</div>
-          </div>
-          <span class="badge badge-warning">Pendiente</span>
-        `;
-        container.appendChild(newCard);
-
-        modalAddMed.classList.remove('active');
-        document.getElementById('form-add-med').reset();
-        alert('¡Medicamento agregado exitosamente a la lista!');
-      });
-
-      // MODAL AGREGAR CONTACTO A RED
-      const modalAddContact = document.getElementById('modal-add-contact');
-      document.getElementById('btn-open-add-contact').addEventListener('click', () => modalAddContact.classList.add('active'));
-      document.getElementById('btn-close-add-contact').addEventListener('click', () => modalAddContact.classList.remove('active'));
-
-      document.getElementById('form-add-contact').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const role = document.getElementById('contact-role').value;
-        const name = document.getElementById('contact-name').value;
-        const lastname = document.getElementById('contact-lastname').value;
-        const phone = document.getElementById('contact-phone').value;
-
-        let icon = "👤";
-        let iconColor = "#2563EB";
-        let iconBg = "#EFF6FF";
-
-        if (role === 'Hijo/a') { icon = "👩‍👧"; iconBg = "#EFF6FF"; iconColor = "#2563EB"; }
-        else if (role === 'Doctor') { icon = "🩺"; iconBg = "#F3E8FF"; iconColor = "#9333EA"; }
-        else if (role === 'Cuidador') { icon = "🧑‍⚕️"; iconBg = "#FEF3C7"; iconColor = "#D97706"; }
-        else if (role === 'Vecino') { icon = "🏠"; iconBg = "#ECFDF5"; iconColor = "#059669"; }
-        else if (role === 'Interesado') { icon = "🤝"; iconBg = "#F1F5F9"; iconColor = "#475569"; }
-
-        const container = document.getElementById('network-container');
-        const newCard = document.createElement('div');
-        newCard.className = 'sensor-card';
-        const fullName = `${name} ${lastname} (${role})`;
-        
-        newCard.innerHTML = `
-          <div class="sensor-icon-wrapper" style="background: ${iconBg}; color: ${iconColor};">${icon}</div>
-          <div class="sensor-info">
-            <div class="sensor-title">${name} ${lastname}</div>
-            <div class="sensor-desc">${phone} · ${role}</div>
-          </div>
-          <div style="display: flex; gap: 4px;">
-            <button class="btn-check-med btn-call-contact" data-name="${fullName}" style="padding: 6px 8px; font-size: 10px; width: auto; background: ${iconColor};">📞</button>
-            <button class="btn-snooze-med btn-delete-contact" style="padding: 6px 8px; font-size: 10px; background: #FEE2E2; color: #DC2626; border: none;">🗑️️</button>
-          </div>
-        `;
-        container.appendChild(newCard);
-
-        modalAddContact.classList.remove('active');
-        document.getElementById('form-add-contact').reset();
-        alert('¡Persona agregada exitosamente a la red de apoyo!');
-      });
-
-      // ELIMINAR CONTACTO DE LA RED (Delegación de eventos)
-      document.addEventListener('click', (e) => {
-        if (e.target.closest('.btn-delete-contact')) {
-          const card = e.target.closest('.sensor-card');
-          if (confirm('¿Estás seguro de eliminar este contacto de la red?')) {
+        const deleteBtn = e.target.closest('.btn-delete-contact');
+        if (deleteBtn) {
+          const card = deleteBtn.closest('.sensor-card');
+          if (card && confirm('¿Deseas eliminar este contacto de la red?')) {
             card.remove();
           }
         }
       });
 
-      // BOTÓN ESTOY BIEN
-      document.getElementById('btn-senior-status').addEventListener('click', () => {
-        document.getElementById('status-checkin-badge').innerText = "✓ Seguro (Reportado)";
-        document.getElementById('status-checkin-badge').className = "badge badge-success";
-        alert('¡Reporte enviado! La familia y el cuidador han sido notificados de que te encuentras bien.');
-      });
-
-      // CONFIGURACIÓN (LocalStorage)
-      const modalConfig = document.getElementById('modal-config');
+      // 6. CONTROL DE CONFIGURACIÓN DEL RESIDENTE
       document.getElementById('btn-open-config').addEventListener('click', () => modalConfig.classList.add('active'));
       document.getElementById('btn-close-config').addEventListener('click', () => modalConfig.classList.remove('active'));
 
@@ -1193,29 +1160,153 @@
         savedData.location = document.getElementById('cfg-location').value;
 
         localStorage.setItem('hogarSeguroConfig', JSON.stringify(savedData));
-
-        document.getElementById('display-senior-name').innerText = `${savedData.seniorName} (${savedData.age} años)`;
-        document.getElementById('display-senior-location').innerText = savedData.location;
-        
+        updateProfileDisplay();
         modalConfig.classList.remove('active');
-        alert('¡Datos guardados exitosamente!');
       });
 
-      // SIMULADOR Y LLAMADAS
-      const modalCall = document.getElementById('modal-call');
-      function openCallModal(targetName) {
-        document.getElementById('call-target-name').innerText = targetName;
-        modalCall.classList.add('active');
+      // 7. AGREGAR MEDICAMENTOS DINÁMICAMENTE
+      document.getElementById('btn-open-add-med').addEventListener('click', () => modalAddMed.classList.add('active'));
+      document.getElementById('btn-close-add-med').addEventListener('click', () => modalAddMed.classList.remove('active'));
+
+      document.getElementById('form-add-med').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('new-med-name').value;
+        const time = document.getElementById('new-med-time').value;
+
+        const medContainer = document.getElementById('medicaments-container');
+        const medCard = document.createElement('div');
+        medCard.className = 'sensor-card';
+        medCard.innerHTML = `
+          <div class="sensor-icon-wrapper" style="background: #EFF6FF; color: #2563EB;">💊</div>
+          <div class="sensor-info">
+            <div class="sensor-title">${name}</div>
+            <div class="sensor-desc">Próxima toma: ${time}</div>
+          </div>
+          <span class="badge badge-warning">Pendiente</span>
+        `;
+        medContainer.prepend(medCard);
+
+        document.getElementById('senior-med-title').innerText = name;
+        document.getElementById('next-dose-time').innerText = time;
+
+        modalAddMed.classList.remove('active');
+        document.getElementById('form-add-med').reset();
+      });
+
+      document.getElementById('btn-take-med').addEventListener('click', () => {
+        alert('Medicamento registrado correctamente.');
+        document.getElementById('metric-meds').innerText = '2/2';
+        updateJSON({ event: "MEDICATION_TAKEN", drug: document.getElementById('senior-med-title').innerText, time: new Date().toLocaleTimeString() });
+      });
+
+      document.getElementById('btn-snooze-med').addEventListener('click', () => {
+        alert('Recordatorio pospuesto por 15 minutos.');
+      });
+
+      // 8. AGREGAR CONTACTOS A LA RED
+      document.getElementById('btn-open-add-contact').addEventListener('click', () => modalAddContact.classList.add('active'));
+      document.getElementById('btn-close-add-contact').addEventListener('click', () => modalAddContact.classList.remove('active'));
+
+      document.getElementById('form-add-contact').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const role = document.getElementById('contact-role').value;
+        const name = document.getElementById('contact-name').value;
+        const lastname = document.getElementById('contact-lastname').value;
+        const phone = document.getElementById('contact-phone').value;
+
+        const fullName = `${name} ${lastname} (${role})`;
+        const networkContainer = document.getElementById('network-container');
+
+        const contactCard = document.createElement('div');
+        contactCard.className = 'sensor-card';
+        contactCard.innerHTML = `
+          <div class="sensor-icon-wrapper" style="background: #EFF6FF; color: #2563EB;">👤</div>
+          <div class="sensor-info">
+            <div class="sensor-title">${fullName}</div>
+            <div class="sensor-desc">${phone}</div>
+          </div>
+          <div style="display: flex; gap: 4px;">
+            <button class="btn-check-med btn-call-contact" data-name="${fullName}" style="padding: 6px 8px; font-size: 10px; width: auto;">📞</button>
+            <button class="btn-snooze-med btn-delete-contact" style="padding: 6px 8px; font-size: 10px; background: #FEE2E2; color: #DC2626; border: none;">🗑️</button>
+          </div>
+        `;
+        networkContainer.prepend(contactCard);
+
+        modalAddContact.classList.remove('active');
+        document.getElementById('form-add-contact').reset();
+      });
+
+      // 9. LÓGICA DEL SIMULADOR IOT EN TIEMPO REAL
+      function updateJSON(payload) {
+        jsonPreview.innerText = JSON.stringify(payload, null, 2);
       }
 
-      document.getElementById('btn-end-call')?.addEventListener('click', () => modalCall.classList.remove('active'));
-      document.getElementById('btn-senior-sos')?.addEventListener('click', () => openCallModal('Red Familiar (SOS)'));
+      document.getElementById('btn-sim-sos').addEventListener('click', () => {
+        triggerCall('Emergencia SOS (Simulador)');
+        document.getElementById('status-checkin-badge').className = "badge badge-alert";
+        document.getElementById('status-checkin-badge').innerText = "🚨 ALERTA SOS";
+        updateJSON({
+          type: "ALARM",
+          event: "SOS_BUTTON_PRESSED",
+          device: "BT_SOS_PENDANT_01",
+          location: "Habitación Principal",
+          timestamp: new Date().toISOString()
+        });
+      });
 
-      document.addEventListener('click', (e) => {
-        if (e.target.closest('.btn-call-contact')) {
-          const btn = e.target.closest('.btn-call-contact');
-          openCallModal(btn.getAttribute('data-name'));
-        }
+      document.getElementById('btn-sim-fall').addEventListener('click', () => {
+        triggerCall('Detección Caída mmWave');
+        document.getElementById('fall-desc').innerText = " Baño · ¡CAÍDA DETECTADA!";
+        document.getElementById('fall-badge').className = "badge badge-alert";
+        document.getElementById('fall-badge').innerText = "ALERTA";
+        document.getElementById('status-checkin-badge').className = "badge badge-alert";
+        document.getElementById('status-checkin-badge').innerText = "⚠️ Caída Detectada";
+        
+        updateJSON({
+          type: "ALARM",
+          event: "FALL_DETECTED",
+          sensor: "RADAR_MMWAVE_BATHROOM",
+          confidence: "98%",
+          timestamp: new Date().toISOString()
+        });
+      });
+
+      document.getElementById('btn-sim-door').addEventListener('click', () => {
+        document.getElementById('door-desc').innerText = "Abierta · Hace 1 min";
+        document.getElementById('door-badge').className = "badge badge-warning";
+        document.getElementById('door-badge').innerText = "Abierta";
+        
+        updateJSON({
+          type: "SENSOR_EVENT",
+          event: "DOOR_OPENED",
+          sensor: "CONTACT_FRONT_DOOR",
+          status: "OPEN",
+          timestamp: new Date().toISOString()
+        });
+      });
+
+      document.getElementById('btn-sim-water').addEventListener('click', () => {
+        alert('⚠️ ALERTA IOT: Fuga de agua detectada en la cocina.');
+        updateJSON({
+          type: "ALARM",
+          event: "WATER_LEAK",
+          sensor: "LEAK_KITCHEN_SINK",
+          severity: "HIGH",
+          timestamp: new Date().toISOString()
+        });
+      });
+
+      document.getElementById('btn-sim-fridge').addEventListener('click', () => {
+        const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('fridge-desc').innerText = `Última apertura: ${now}`;
+        document.getElementById('metric-activity').innerText = 'Activo';
+        
+        updateJSON({
+          type: "ROUTINE_EVENT",
+          event: "FRIDGE_OPENED",
+          sensor: "CONTACT_FRIDGE_DOOR",
+          timestamp: new Date().toISOString()
+        });
       });
 
     });
