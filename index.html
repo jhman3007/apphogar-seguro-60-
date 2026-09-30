@@ -438,7 +438,7 @@
       cursor: pointer;
       border: none;
       background: transparent;
-      width: 25%;
+      width: 100%;
     }
 
     .nav-item.active {
@@ -643,7 +643,7 @@
       </header>
 
       <main class="app-body">
-        <!-- PANTALLA SENIOR -->
+        <!-- VISTA SENIOR -->
         <section class="view-panel active" id="panel-senior">
           <div class="senior-card" style="background: #FEF2F2; border-color: #FECACA;">
             <p style="font-size: 11px; font-weight: 700; color: #991B1B; margin-bottom: 4px;">¿NECESITAS AYUDA INMEDIATA?</p>
@@ -681,45 +681,9 @@
               Ver Timbre
             </button>
           </div>
-
-          <!-- BOTÓN CONFIGURAR SENIOR (Añadido aquí) -->
-          <div style="margin-top: 4px;">
-            <button class="senior-btn-lg" id="btn-open-config" style="width: 100%; flex-direction: row; justify-content: center; gap: 8px; padding: 12px; background: #F1F5F9; border-color: var(--border);">
-              <icon style="font-size: 18px;">⚙️</icon>
-              Configurar Senior
-            </button>
-          </div>
         </section>
 
-        <!-- PANTALLA MEDICAMENTOS -->
-        <section class="view-panel" id="panel-medications">
-          <div class="section-title">
-            <span>Control de Medicamentos</span>
-            <button class="btn-check-med" id="btn-open-add-med" style="width: auto; padding: 5px 8px; font-size: 10px;">+ Agregar</button>
-          </div>
-
-          <div class="sensor-list" id="medicaments-container">
-            <div class="sensor-card">
-              <div class="sensor-icon-wrapper" style="background: #EFF6FF; color: #2563EB;">💊</div>
-              <div class="sensor-info">
-                <div class="sensor-title">Losartán 50mg</div>
-                <div class="sensor-desc">Próxima toma: 12:00 PM</div>
-              </div>
-              <span class="badge badge-warning">Pendiente</span>
-            </div>
-
-            <div class="sensor-card">
-              <div class="sensor-icon-wrapper" style="background: #ECFDF5; color: #059669;">💊</div>
-              <div class="sensor-info">
-                <div class="sensor-title">Aspirina 100mg</div>
-                <div class="sensor-desc">Tomado hoy a las 08:00 AM</div>
-              </div>
-              <span class="badge badge-success">Completado</span>
-            </div>
-          </div>
-        </section>
-
-        <!-- PANTALLA FAMILIA -->
+        <!-- VISTA FAMILIA - DASHBOARD -->
         <section class="view-panel" id="panel-family">
           <div class="status-summary-card">
             <div class="status-header">
@@ -783,7 +747,7 @@
           </div>
         </section>
 
-        <!-- PANTALLA RED DE APOYO -->
+        <!-- VISTA FAMILIA - RED DE APOYO -->
         <section class="view-panel" id="panel-network">
           <div class="section-title">
             <span>Red de Apoyo & Contactos</span>
@@ -818,26 +782,12 @@
         </section>
       </main>
 
+      <!-- BARRA DE NAVEGACIÓN INFERIOR DINÁMICA -->
       <nav class="nav-bar" id="main-nav-bar">
-        <button class="nav-item active" data-target="panel-senior">
-          <icon>🏠</icon>
-          <span>Inicio</span>
-        </button>
-        <button class="nav-item" data-target="panel-medications">
-          <icon>💊</icon>
-          <span>Medicina</span>
-        </button>
-        <button class="nav-item" data-target="panel-family">
-          <icon>📊</icon>
-          <span>Familia</span>
-        </button>
-        <button class="nav-item" data-target="panel-network">
-          <icon>👥</icon>
-          <span>Red</span>
-        </button>
+        <!-- Se renderiza dinámicamente mediante JS -->
       </nav>
 
-      <!-- MODAL LLAMADA -->
+      <!-- MODAL DE LLAMADA SOS -->
       <div class="modal-overlay" id="modal-call">
         <div class="modal-card">
           <div class="call-avatar">📞</div>
@@ -847,7 +797,7 @@
         </div>
       </div>
 
-      <!-- MODAL CONFIGURACIÓN -->
+      <!-- MODAL DE CONFIGURACIÓN -->
       <div class="modal-overlay" id="modal-config">
         <div class="modal-card">
           <h3 style="font-size: 15px; margin-bottom: 10px; text-align: left;">Configurar Adulto Mayor</h3>
@@ -907,124 +857,198 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Cambio de rol Senior / Familia en header
       const btnRoleSenior = document.getElementById('btn-role-senior');
       const btnRoleFamily = document.getElementById('btn-role-family');
       
+      const panelSenior = document.getElementById('panel-senior');
+      const panelFamily = document.getElementById('panel-family');
+      const panelNetwork = document.getElementById('panel-network');
+      const mainNavBar = document.getElementById('main-nav-bar');
+      const modalConfig = document.getElementById('modal-config');
+
+      let currentRole = 'senior'; // 'senior' o 'family'
+      let currentTab = 'senior-home'; // 'senior-home' o 'family-dashboard', 'family-network'
+
+      function renderNavBar() {
+        mainNavBar.innerHTML = '';
+        if (currentRole === 'senior') {
+          mainNavBar.innerHTML = `
+            <button class="nav-item active" id="btn-open-config">
+              <icon>⚙️</icon>Configurar Senior
+            </button>
+          `;
+        } else {
+          mainNavBar.innerHTML = `
+            <button class="nav-item ${currentTab === 'family-dashboard' ? 'active' : ''}" onclick="switchTab('family-dashboard')">
+              <icon>📊</icon>Estado
+            </button>
+            <button class="nav-item ${currentTab === 'family-network' ? 'active' : ''}" onclick="switchTab('family-network')">
+              <icon>👥</icon>Red
+            </button>
+          `;
+          // Re-vincular el evento del botón de configurar senior si se vuelve a la vista senior
+        }
+        
+        // Asegurar que el botón de configurar abra el modal en cualquier rol
+        const btnConfig = document.getElementById('btn-open-config');
+        if (btnConfig) {
+          btnConfig.addEventListener('click', () => {
+            modalConfig.classList.add('active');
+          });
+        }
+      }
+
+      window.switchTab = function(tab) {
+        currentTab = tab;
+        panelSenior.classList.remove('active');
+        panelFamily.classList.remove('active');
+        panelNetwork.classList.remove('active');
+
+        if (tab === 'senior-home') {
+          panelSenior.classList.add('active');
+        } else if (tab === 'family-dashboard') {
+          panelFamily.classList.add('active');
+        } else if (tab === 'family-network') {
+          panelNetwork.classList.add('active');
+        }
+        renderNavBar();
+      }
+
       btnRoleSenior.addEventListener('click', () => {
+        currentRole = 'senior';
+        currentTab = 'senior-home';
         btnRoleSenior.classList.add('active');
         btnRoleFamily.classList.remove('active');
-        switchPanel('panel-senior');
+        panelFamily.classList.remove('active');
+        panelNetwork.classList.remove('active');
+        panelSenior.classList.add('active');
+        renderNavBar();
       });
 
       btnRoleFamily.addEventListener('click', () => {
+        currentRole = 'family';
+        currentTab = 'family-dashboard';
         btnRoleFamily.classList.add('active');
         btnRoleSenior.classList.remove('active');
-        switchPanel('panel-family');
+        panelSenior.classList.remove('active');
+        panelFamily.classList.add('active');
+        renderNavBar();
       });
 
-      // Navegación inferior
-      const navItems = document.querySelectorAll('.nav-item');
-      navItems.forEach(item => {
-        item.addEventListener('click', () => {
-          navItems.forEach(i => i.classList.remove('active'));
-          item.classList.add('active');
-          const target = item.getAttribute('data-target');
-          switchPanel(target);
-        });
-      });
+      renderNavBar();
 
-      function switchPanel(panelId) {
-        document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
-        document.getElementById(panelId).classList.add('active');
-      }
-
-      // Modales y llamadas SOS
+      // MODALES Y LLAMADAS
       const modalCall = document.getElementById('modal-call');
       const callTargetName = document.getElementById('call-target-name');
-      
+      const btnEndCall = document.getElementById('btn-end-call');
+
+      function openCallModal(name) {
+        callTargetName.innerText = name;
+        modalCall.classList.add('active');
+      }
+
+      btnEndCall.addEventListener('click', () => {
+        modalCall.classList.remove('active');
+      });
+
+      document.querySelectorAll('.btn-call-contact').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const name = btn.getAttribute('data-name') || "Red de Apoyo";
+          openCallModal(name);
+        });
+      });
+
       document.getElementById('btn-senior-sos').addEventListener('click', () => {
-        callTargetName.innerText = "Red Familiar (SOS Alerta)";
-        modalCall.classList.add("active");
-        updateJsonPreview({ event: "SOS_PRESSED", source: "Senior Panic Button" });
+        openCallModal('🚨 Emergencia SOS (Familia y Vecinos)');
       });
 
-      document.getElementById('btn-end-call').addEventListener('click', () => {
-        modalCall.classList.remove("active");
+      // CONFIGURACIÓN MODAL
+      document.getElementById('btn-close-config').addEventListener('click', () => {
+        modalConfig.classList.remove('active');
       });
 
-      // Modal Configuración
-      const modalConfig = document.getElementById('modal-config');
-      const btnOpenConfig = document.getElementById('btn-open-config');
-      const btnCloseConfig = document.getElementById('btn-close-config');
-      const formConfig = document.getElementById('form-config');
+      document.getElementById('form-config').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const newName = document.getElementById('cfg-name').value;
+        const newAge = document.getElementById('cfg-age').value;
+        const newLoc = document.getElementById('cfg-location').value;
 
-      if (btnOpenConfig) {
-        btnOpenConfig.addEventListener('click', () => {
-          modalConfig.classList.add("active");
-        });
-      }
+        document.getElementById('display-senior-name').innerText = `${newName} (${newAge} años)`;
+        document.getElementById('display-senior-location').innerText = newLoc;
 
-      if (btnCloseConfig) {
-        btnCloseConfig.addEventListener('click', () => {
-          modalConfig.classList.remove("active");
-        });
-      }
+        modalConfig.classList.remove('active');
+      });
 
-      if (formConfig) {
-        formConfig.addEventListener('submit', (e) => {
-          e.preventDefault();
-          const newName = document.getElementById('cfg-name').value;
-          const newAge = document.getElementById('cfg-age').value;
-          const newLocation = document.getElementById('cfg-location').value;
+      // ACCIÓN TOMAR MEDICAMENTO
+      document.getElementById('btn-take-med').addEventListener('click', () => {
+        alert('¡Medicamento registrado como tomado con éxito!');
+        document.getElementById('senior-med-title').style.textDecoration = 'line-through';
+        document.getElementById('next-dose-time').innerText = 'Completado (¡Buen trabajo!)';
+      });
 
-          document.getElementById('display-senior-name').innerText = `${newName} (${newAge} años)`;
-          document.getElementById('display-senior-location').innerText = newLocation;
-          
-          modalConfig.classList.remove("active");
-          updateJsonPreview({ action: "CONFIG_UPDATED", name: newName, age: newAge, location: newLocation });
-        });
-      }
+      // SIMULADOR IOT
+      const jsonPreview = document.getElementById('json-preview');
 
-      // Simulador IoT
       function updateJsonPreview(data) {
         const payload = {
           timestamp: new Date().toISOString(),
           gateway_id: "GW_HOGAR_SEGURO_001",
           ...data
         };
-        document.getElementById('json-preview').innerText = JSON.stringify(payload, null, 2);
+        jsonPreview.innerText = JSON.stringify(payload, null, 2);
       }
 
       document.getElementById('btn-sim-sos').addEventListener('click', () => {
-        callTargetName.innerText = "🚨 Alerta SOS Inyectada";
-        modalCall.classList.add("active");
-        updateJsonPreview({ sensor: "panic_button", state: "TRIGGERED", priority: "HIGH" });
+        updateJsonPreview({
+          event: "EMERGENCY_SOS",
+          device: "PULSESOFT_PENDANT",
+          location: "Living Room",
+          severity: "CRITICAL"
+        });
+        openCallModal('🚨 Alerta SOS Inyectada por Hardware');
       });
 
       document.getElementById('btn-sim-fall').addEventListener('click', () => {
         document.getElementById('fall-desc').innerText = "Baño Principal · ¡Caída Detectada!";
         document.getElementById('fall-badge').className = "badge badge-alert";
         document.getElementById('fall-badge').innerText = "¡ALERTA!";
-        updateJsonPreview({ sensor: "mmWave_radar", location: "bathroom", event: "FALL_DETECTED" });
+        updateJsonPreview({
+          event: "FALL_DETECTED",
+          device: "MMWAVE_RADAR_01",
+          zone: "Baño Principal",
+          status: "FALL_CONFIRMED"
+        });
+        alert('¡Simulación IoT: Radar mmWave detectó una caída en el baño!');
       });
 
       document.getElementById('btn-sim-door').addEventListener('click', () => {
-        document.getElementById('door-desc').innerText = "Abierta · Posible salida no autorizada";
+        document.getElementById('door-desc').innerText = "Abierta · Salida detectada";
         document.getElementById('door-badge').className = "badge badge-warning";
         document.getElementById('door-badge').innerText = "Abierta";
-        updateJsonPreview({ sensor: "door_contact", status: "OPEN" });
+        updateJsonPreview({
+          event: "DOOR_OPENED",
+          device: "CONTACT_SENSOR_MAIN",
+          status: "OPEN"
+        });
       });
 
       document.getElementById('btn-sim-water').addEventListener('click', () => {
-        updateJsonPreview({ sensor: "water_leak", location: "utility_room", status: "FLOOD_WARNING" });
-        alert("⚠️ Alerta Simulada: Fuga de agua detectada en lavadero.");
+        updateJsonPreview({
+          event: "WATER_LEAK",
+          device: "FLOOD_SENSOR_LAVATORY",
+          status: "LEAK_DETECTED"
+        });
+        alert('⚠️ Alerta de Hardware: Fuga de agua detectada en lavadero.');
       });
 
       document.getElementById('btn-sim-fridge').addEventListener('click', () => {
-        document.getElementById('fridge-desc').innerText = "Última apertura: Hace un momento";
-        updateJsonPreview({ sensor: "refrigerator_contact", status: "OPEN_ACTIVITY_OK" });
+        updateJsonPreview({
+          event: "FRIDGE_OPENED",
+          device: "DOOR_SENSOR_FRIDGE",
+          status: "ROUTINE_NORMAL"
+        });
       });
+
     });
   </script>
 </body>
