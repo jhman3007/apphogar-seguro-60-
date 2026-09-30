@@ -109,9 +109,6 @@
     .brand {
       display: flex;
       align-items: center;
-      font-weight: 800;
-      font-size: 16px;
-      color: var(--primary);
     }
 
     .brand-logo-img {
@@ -452,7 +449,7 @@
       cursor: pointer;
       border: none;
       background: transparent;
-      width: 33%;
+      width: 100%;
     }
 
     .nav-item.active {
@@ -655,7 +652,7 @@
       <!-- ENCABEZADO CON LOGO DE IMAGEN -->
       <header class="app-header">
         <div class="brand">
-          <img src="logo.png" alt="Hogar Seguro 60+" class="brand-logo-img" onerror="this.onerror=null; this.outerHTML='<span>HogarSeguro60+</span>';">
+          <img src="logo.png" alt="Hogar Seguro 60+" class="brand-logo-img">
         </div>
         <div class="role-switcher">
           <button class="role-btn active" id="btn-role-senior">Senior</button>
@@ -771,7 +768,7 @@
             </div>
           </div>
 
-          <!-- SENSORES IOT (SE ELIMINÓ EL BOTÓN DE CONFIGURAR DE AQUÍ) -->
+          <!-- SENSORES IOT -->
           <div class="section-title">
             <span>Red de Sensores IoT</span>
           </div>
@@ -1043,21 +1040,12 @@
       let currentRole = 'senior';
 
       // 3. RENDERIZAR BARRA DE NAVEGACIÓN INFERIOR
-      // REQUISITO: En modo Senior, el botón "Inicio" fue sustituido por "Configurar" que abre directamente el modal de datos (#modal-config)
       function renderNavBar(role) {
         if (role === 'senior') {
           mainNavBar.innerHTML = `
-            <button class="nav-item" id="nav-btn-config">
+            <button class="nav-item active" id="btn-nav-senior-config">
               <icon>⚙️</icon>
               <span>Configurar</span>
-            </button>
-            <button class="nav-item" data-target="panel-medications">
-              <icon>💊</icon>
-              <span>Remedios</span>
-            </button>
-            <button class="nav-item" data-target="panel-network">
-              <icon>📞</icon>
-              <span>Contactos</span>
             </button>
           `;
         } else {
@@ -1090,15 +1078,18 @@
       }
 
       function attachNavEvents() {
-        document.querySelectorAll('.nav-bar .nav-item').forEach(btn => {
-          btn.addEventListener('click', () => {
-            if (btn.id === 'nav-btn-config') {
+        if (currentRole === 'senior') {
+          const btnSeniorConfig = document.getElementById('btn-nav-senior-config');
+          if (btnSeniorConfig) {
+            btnSeniorConfig.addEventListener('click', () => {
               modalConfig.classList.add('active');
-            } else if (btn.dataset.target) {
-              switchPanel(btn.dataset.target);
-            }
+            });
+          }
+        } else {
+          document.querySelectorAll('.nav-bar .nav-item').forEach(btn => {
+            btn.addEventListener('click', () => switchPanel(btn.dataset.target));
           });
-        });
+        }
       }
 
       // 4. CONMUTACIÓN DE ROLES (SENIOR / FAMILIA)
