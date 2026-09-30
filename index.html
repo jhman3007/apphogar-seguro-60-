@@ -643,7 +643,6 @@
       </header>
 
       <main class="app-body">
-        <!-- Vista Senior -->
         <section class="view-panel active" id="panel-senior">
           <div class="senior-card" style="background: #FEF2F2; border-color: #FECACA;">
             <p style="font-size: 11px; font-weight: 700; color: #991B1B; margin-bottom: 4px;">¿NECESITAS AYUDA INMEDIATA?</p>
@@ -683,7 +682,6 @@
           </div>
         </section>
 
-        <!-- Vista Medicamentos -->
         <section class="view-panel" id="panel-medications">
           <div class="section-title">
             <span>Control de Medicamentos</span>
@@ -711,7 +709,6 @@
           </div>
         </section>
 
-        <!-- Vista Familia -->
         <section class="view-panel" id="panel-family">
           <div class="status-summary-card">
             <div class="status-header">
@@ -776,7 +773,6 @@
           </div>
         </section>
 
-        <!-- Vista Red -->
         <section class="view-panel" id="panel-network">
           <div class="section-title">
             <span>Red de Apoyo & Contactos</span>
@@ -830,7 +826,6 @@
         </button>
       </nav>
 
-      <!-- Modal de Llamada SOS -->
       <div class="modal-overlay" id="modal-call">
         <div class="modal-card">
           <div class="call-avatar">📞</div>
@@ -840,7 +835,6 @@
         </div>
       </div>
 
-      <!-- Modal de Configuración -->
       <div class="modal-overlay" id="modal-config">
         <div class="modal-card">
           <h3 style="font-size: 15px; margin-bottom: 10px; text-align: left;">Configurar Adulto Mayor</h3>
@@ -866,7 +860,6 @@
       </div>
     </div>
 
-    <!-- Panel Simulador IoT -->
     <div class="iot-simulator">
       <div class="sim-header">
         <div class="sim-title">
@@ -900,7 +893,6 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Cambio de rol Senior / Familia en header
       const btnRoleSenior = document.getElementById('btn-role-senior');
       const btnRoleFamily = document.getElementById('btn-role-family');
       
@@ -916,7 +908,6 @@
         switchPanel('panel-family');
       });
 
-      // Navegación inferior
       const navItems = document.querySelectorAll('.nav-item');
       navItems.forEach(item => {
         item.addEventListener('click', () => {
@@ -932,7 +923,6 @@
         document.getElementById(panelId).classList.add('active');
       }
 
-      // Modales y llamadas SOS
       const modalCall = document.getElementById('modal-call');
       const callTargetName = document.getElementById('call-target-name');
       
@@ -946,7 +936,6 @@
         modalCall.classList.remove("active");
       });
 
-      // Simulador IoT
       function updateJsonPreview(data) {
         const payload = {
           timestamp: new Date().toISOString(),
