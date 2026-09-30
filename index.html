@@ -1,522 +1,1224 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hogar Seguro 60+</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .pulse-slow {
-            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hogar Seguro 60+ | App de Monitoreo & Asistencia Senior</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563EB;
+      --primary-dark: #1D4ED8;
+      --primary-light: #EFF6FF;
+      --secondary: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --bg-app: #F8FAFC;
+      --surface: #FFFFFF;
+      --border: #E2E8F0;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 12px 24px -4px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 20px 32px -8px rgba(15, 23, 42, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #0B0F19;
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    /* CONTENEDOR PRINCIPAL RESPONSIVO */
+    .app-workspace {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      max-width: 1200px;
+      width: 100%;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    /* MARCO DEL TELÉFONO */
+    .phone-container {
+      width: 100%;
+      max-width: 390px;
+      height: 800px;
+      background: var(--bg-app);
+      border-radius: 48px;
+      box-shadow: 0 0 0 10px #1E293B, 0 24px 48px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 4px solid #334155;
+    }
+
+    /* BARRA DE ESTADO Y DYNAMIC ISLAND */
+    .status-bar {
+      height: 40px;
+      background: transparent;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 13px;
+      font-weight: 700;
+      z-index: 100;
+      color: var(--text-main);
+    }
+
+    .dynamic-island {
+      width: 100px;
+      height: 24px;
+      background: #000;
+      border-radius: 20px;
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 101;
+    }
+
+    /* ENCABEZADO Y SELECTOR DE ROL */
+    .app-header {
+      padding: 8px 14px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+    }
+
+    .brand-logo-img {
+      height: 32px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* INTERRUPTOR MODO SENIOR / FAMILIA */
+    .role-switcher {
+      background: #F1F5F9;
+      padding: 3px;
+      border-radius: 30px;
+      display: flex;
+      gap: 2px;
+      border: 1px solid var(--border);
+    }
+
+    .role-btn {
+      padding: 5px 10px;
+      border-radius: 20px;
+      border: none;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: transparent;
+      color: var(--text-muted);
+    }
+
+    .role-btn.active {
+      background: var(--surface);
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ÁREA DE CONTENIDO PRINCIPAL */
+    .app-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .app-body::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .app-body::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+
+    /* VISTAS DUALES */
+    .view-panel {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .view-panel.active {
+      display: flex;
+    }
+
+    /* MODO SENIOR - DISEÑO ADAPTADO */
+    .senior-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      border: 2px solid #E2E8F0;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+
+    .senior-sos-btn {
+      width: 100%;
+      height: 72px;
+      background: linear-gradient(135deg, #EF4444, #DC2626);
+      border: none;
+      border-radius: var(--radius-lg);
+      color: white;
+      font-weight: 800;
+      font-size: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      box-shadow: 0 6px 12px rgba(239, 68, 68, 0.35);
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    .senior-sos-btn:active {
+      transform: scale(0.97);
+    }
+
+    .senior-sos-btn span {
+      font-size: 11px;
+      font-weight: 600;
+      opacity: 0.9;
+    }
+
+    .senior-action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .senior-btn-lg {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .senior-btn-lg icon {
+      font-size: 24px;
+    }
+
+    /* BANNER DE MEDICAMENTOS */
+    .medication-banner {
+      background: #EFF6FF;
+      border: 2px solid #BFDBFE;
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-align: left;
+    }
+
+    .med-info h4 {
+      font-size: 15px;
+      color: #1E40AF;
+    }
+
+    .med-info p {
+      font-size: 12px;
+      color: #3B82F6;
+      margin-top: 2px;
+    }
+
+    .med-buttons-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .btn-check-med {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+    }
+
+    .btn-snooze-med {
+      background: #E2E8F0;
+      color: #334155;
+      border: none;
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* MODO FAMILIA - DASHBOARD COMPLETO */
+    .status-summary-card {
+      background: linear-gradient(135deg, #1E293B, #0F172A);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .status-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #38BDF8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 16px;
+      color: #0F172A;
+      border: 2px solid white;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .badge-success { background: rgba(16, 185, 129, 0.2); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-warning { background: rgba(245, 158, 11, 0.2); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-alert { background: rgba(239, 68, 68, 0.2); color: #FCA5A5; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 10px;
+      border-radius: var(--radius-md);
+    }
+
+    .metric-item {
+      text-align: center;
+    }
+
+    .metric-val {
+      font-size: 14px;
+      font-weight: 800;
+      color: white;
+    }
+
+    .metric-lbl {
+      font-size: 9px;
+      color: #94A3B8;
+      margin-top: 2px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sensor-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sensor-card {
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sensor-icon-wrapper {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .sensor-info {
+      flex: 1;
+      margin-left: 10px;
+    }
+
+    .sensor-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .sensor-desc {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    /* BARRA DE NAVEGACIÓN INFERIOR */
+    .nav-bar {
+      height: 60px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      width: 25%;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-item icon {
+      font-size: 18px;
+    }
+
+    /* SIMULADOR IOT RESPONSIVO */
+    .iot-simulator {
+      flex: 1;
+      max-width: 380px;
+      background: #1E293B;
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      color: white;
+      border: 1px solid #334155;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .sim-header {
+      border-bottom: 1px solid #334155;
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+    }
+
+    .sim-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #38BDF8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sim-subtitle {
+      font-size: 11px;
+      color: #94A3B8;
+      margin-top: 4px;
+    }
+
+    .sim-group-title {
+      font-size: 10px;
+      font-weight: 800;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .sim-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .btn-sim {
+      background: #0F172A;
+      border: 1px solid #334155;
+      color: #E2E8F0;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-sim:hover {
+      background: #334155;
+      border-color: #475569;
+    }
+
+    .btn-sim.danger { border-left: 4px solid var(--danger); }
+    .btn-sim.warning { border-left: 4px solid var(--warning); }
+    .btn-sim.success { border-left: 4px solid var(--secondary); }
+
+    .json-preview {
+      background: #090D16;
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      font-family: monospace;
+      font-size: 10px;
+      color: #38BDF8;
+      max-height: 140px;
+      overflow-y: auto;
+      border: 1px solid #1E293B;
+    }
+
+    /* MODAL GENERAL */
+    .modal-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      width: 100%;
+      max-width: 320px;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .call-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: #EF4444;
+      color: white;
+      font-size: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 16px rgba(239, 68, 68, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    .btn-end-call {
+      background: var(--danger);
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 800;
+      margin-top: 16px;
+      cursor: pointer;
+    }
+
+    .config-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-align: left;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .form-group label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .form-group input, .form-group select {
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      font-size: 12px;
+      background: var(--surface);
+    }
+  </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col selection:bg-teal-500 selection:text-white">
+<body>
 
-    <!-- Header / Navigation Bar -->
-    <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40 shadow-sm">
-        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-2xl bg-teal-600 flex items-center justify-center text-white shadow-lg shadow-teal-600/30">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                </div>
-                <div>
-                    <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">Hogar Seguro 60+</h1>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Asistencia y Convivencia Inteligente</p>
-                </div>
-            </div>
+  <div class="app-workspace">
 
-            <!-- View Switcher Tabs -->
-            <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl border border-slate-200 dark:border-slate-700">
-                <button onclick="switchView('senior')" id="tab-senior" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                    <span>Modo Senior</span>
-                </button>
-                <button onclick="switchView('family')" id="tab-family" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                    <span>Modo Familia</span>
-                </button>
-            </div>
+    <!-- TELÉFONO - PROTOTIPO MÓVIL INTERACTIVO -->
+    <div class="phone-container">
+      
+      <div class="dynamic-island"></div>
+
+      <!-- BARRA DE ESTADO DEL SISTEMA -->
+      <div class="status-bar">
+        <span>09:41</span>
+        <span style="display:flex; gap: 4px;">📶 🔋 98%</span>
+      </div>
+
+      <!-- ENCABEZADO CON LOGO DE IMAGEN -->
+      <header class="app-header">
+        <div class="brand">
+          <img src="logo.png" alt="Hogar Seguro 60+" class="brand-logo-img">
         </div>
-    </header>
-
-    <!-- Main Content Area -->
-    <main class="flex-1 max-w-4xl w-full mx-auto px-4 py-6">
-
-        <!-- View: Senior -->
-        <div id="view-senior" class="view-content hidden space-y-6">
-            <!-- Senior Welcome Banner with Configuration Button -->
-            <div class="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div>
-                    <div class="flex items-center space-x-3 mb-1">
-                        <span id="senior-display-name" class="text-3xl font-extrabold tracking-tight">Abuelo/a</span>
-                        <button onclick="openSeniorConfigModal()" class="bg-white/20 hover:bg-white/30 text-white p-2 rounded-xl transition text-sm flex items-center justify-center backdrop-blur-md shadow-sm" title="Configurar Datos Senior">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                        </button>
-                    </div>
-                    <p class="text-teal-100 text-sm font-medium flex items-center space-x-2">
-                        <span id="senior-display-age">72 años</span> • 
-                        <span id="senior-display-location" class="underline decoration-dotted underline-offset-4">Casa Principal</span>
-                    </p>
-                </div>
-                <div class="bg-white/15 px-4 py-2 rounded-2xl backdrop-blur-md flex items-center space-x-2 self-start sm:self-center">
-                    <span class="w-3 h-3 bg-emerald-300 rounded-full animate-pulse"></span>
-                    <span class="text-sm font-semibold">Sistema Activo</span>
-                </div>
-            </div>
-
-            <!-- Big SOS Emergency Button -->
-            <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-xl border border-slate-100 dark:border-slate-800 text-center relative overflow-hidden">
-                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-rose-500/5 rounded-full blur-2xl"></div>
-                <h2 class="text-2xl font-black text-slate-800 dark:text-white mb-2">¿Necesitas Ayuda Urgente?</h2>
-                <p class="text-slate-500 dark:text-slate-400 text-sm mb-8">Presiona el botón rojo para alertar a tus familiares inmediatamente.</p>
-                
-                <button onclick="triggerSOS()" class="w-48 h-48 sm:w-56 sm:h-56 mx-auto rounded-full bg-gradient-to-br from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700 text-white font-black text-3xl sm:text-4xl shadow-2xl shadow-rose-600/50 flex flex-col items-center justify-center transition-all duration-300 transform hover:scale-105 active:scale-95 border-8 border-rose-100 dark:border-rose-950/50">
-                    <svg class="w-16 h-16 mb-2 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                    <span>SOS</span>
-                </button>
-            </div>
-
-            <!-- Grid: Medications & IoT Status -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Medications Reminder Widget -->
-                <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-xl border border-slate-100 dark:border-slate-800">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-bold text-lg text-slate-800 dark:text-white flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                            Tus Medicamentos Hoy
-                        </h3>
-                    </div>
-                    <div id="senior-meds-list" class="space-y-3">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
-
-                <!-- IoT Quick Status Widget -->
-                <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-xl border border-slate-100 dark:border-slate-800">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-bold text-lg text-slate-800 dark:text-white flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
-                            Estado del Hogar IoT
-                        </h3>
-                    </div>
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50">
-                            <span class="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center"><span class="w-2.5 h-2.5 bg-emerald-500 rounded-full mr-2"></span> Estufa / Gas</span>
-                            <span id="iot-gas-status" class="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Seguro (Apagado)</span>
-                        </div>
-                        <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50">
-                            <span class="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center"><span class="w-2.5 h-2.5 bg-emerald-500 rounded-full mr-2"></span> Puerta Principal</span>
-                            <span id="iot-door-status" class="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Cerrada</span>
-                        </div>
-                        <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50">
-                            <span class="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center"><span class="w-2.5 h-2.5 bg-emerald-500 rounded-full mr-2"></span> Movimiento Sala</span>
-                            <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Detectado Reciente</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="role-switcher">
+          <button class="role-btn active" id="btn-role-senior">Senior</button>
+          <button class="role-btn" id="btn-role-family">Familia</button>
         </div>
+      </header>
 
-        <!-- View: Family -->
-        <div id="view-family" class="view-content hidden space-y-6">
-            <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-xl border border-slate-100 dark:border-slate-800">
-                <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2 flex items-center">
-                    <svg class="w-6 h-6 mr-2 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                    Red de Apoyo Familiar y Contactos
-                </h3>
-                <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Administra los contactos que recibirán las alertas SOS de emergencia.</p>
-                
-                <!-- Contact List -->
-                <div id="contact-list" class="space-y-4 mb-6">
-                    <!-- Populated by JS -->
-                </div>
+      <!-- CUERPO DE LA APLICACIÓN -->
+      <main class="app-body">
 
-                <div class="border-t border-slate-100 dark:border-slate-800 pt-6">
-                    <h4 class="font-bold text-slate-800 dark:text-white mb-3 text-sm">Agregar Nuevo Contacto</h4>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
-                        <input type="text" id="new-contact-name" placeholder="Nombre y Apellido" class="px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-teal-500">
-                        <input type="text" id="new-contact-phone" placeholder="Teléfono (+34...)" class="px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-teal-500">
-                        <input type="text" id="new-contact-relation" placeholder="Parentesco (Ej. Hijo/a)" class="px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-teal-500">
-                    </div>
-                    <button onclick="addContact()" class="w-full sm:w-auto px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-sm shadow-lg shadow-teal-600/30 transition">Añadir Contacto</button>
-                </div>
+        <!-- ================= MODO SENIOR (INICIO) ================= -->
+        <section class="view-panel active" id="panel-senior">
+          
+          <!-- BOTÓN DE EMERGENCIA (AYUDA) -->
+          <div class="senior-card" style="background: #FEF2F2; border-color: #FECACA;">
+            <p style="font-size: 11px; font-weight: 700; color: #991B1B; margin-bottom: 4px;">¿NECESITAS AYUDA INMEDIATA?</p>
+            <button class="senior-sos-btn" id="btn-senior-sos">
+              🚨 BOTÓN SOS
+              <span>Presiona para llamar a tu familia</span>
+            </button>
+          </div>
+
+          <!-- BOTÓN ESTOY BIEN -->
+          <div class="senior-card" style="background: #ECFDF5; border-color: #A7F3D0; padding: 10px;">
+            <button class="senior-sos-btn" id="btn-senior-status" style="height: 56px; font-size: 16px; background: linear-gradient(135deg, #10B981, #059669); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);">
+              🟢 ESTOY BIEN
+              <span style="font-size: 10px;">Enviar reporte de tranquilidad</span>
+            </button>
+          </div>
+
+          <!-- BANNER DE MEDICAMENTOS RÁPIDO -->
+          <div class="medication-banner">
+            <div class="med-info">
+              <h4 id="senior-med-title">Losartán 50mg</h4>
+              <p>Próxima toma: <strong id="next-dose-time">12:00 PM</strong></p>
+            </div>
+            <div class="med-buttons-group">
+              <button class="btn-check-med" id="btn-take-med">✓ Tomar Medicamento</button>
+              <button class="btn-snooze-med" id="btn-snooze-med">⏰ Posponer 15 minutos</button>
+            </div>
+          </div>
+
+          <div class="senior-action-grid">
+            <button class="senior-btn-lg btn-call-contact" data-name="Hija (Carolina)">
+              <icon>📞</icon>
+              Llamar a Hija
+            </button>
+            <button class="senior-btn-lg" id="btn-senior-door">
+              <icon>🔔</icon>
+              Ver Timbre
+            </button>
+          </div>
+
+        </section>
+
+        <!-- ================= VISTA MEDICAMENTOS ================= -->
+        <section class="view-panel" id="panel-medications">
+          <div class="section-title">
+            <span>Control de Medicamentos</span>
+            <button class="btn-check-med" id="btn-open-add-med" style="width: auto; padding: 5px 8px; font-size: 10px;">+ Agregar</button>
+          </div>
+
+          <div class="sensor-list" id="medicaments-container">
+            <div class="sensor-card">
+              <div class="sensor-icon-wrapper" style="background: #EFF6FF; color: #2563EB;">💊</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Losartán 50mg</div>
+                <div class="sensor-desc">Próxima toma: 12:00 PM</div>
+              </div>
+              <span class="badge badge-warning">Pendiente</span>
             </div>
 
-            <!-- IoT Simulator Control Panel -->
-            <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-xl border border-slate-100 dark:border-slate-800">
-                <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2 flex items-center">
-                    <svg class="w-6 h-6 mr-2 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
-                    Simulador de Sensores IoT del Hogar
-                </h3>
-                <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Prueba el comportamiento de los sensores conectados en tiempo real.</p>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between border border-slate-100 dark:border-slate-700">
-                        <div>
-                            <p class="font-bold text-slate-800 dark:text-white text-sm">Simular Estufa Encendida</p>
-                            <p class="text-xs text-slate-500">Activa alerta por gas o calor prolongado</p>
-                        </div>
-                        <button onclick="toggleIoTSimulator('gas')" id="btn-sim-gas" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 transition">Activar</button>
-                    </div>
-                    <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between border border-slate-100 dark:border-slate-700">
-                        <div>
-                            <p class="font-bold text-slate-800 dark:text-white text-sm">Simular Puerta Abierta</p>
-                            <p class="text-xs text-slate-500">Detecta apertura fuera de horario</p>
-                        </div>
-                        <button onclick="toggleIoTSimulator('door')" id="btn-sim-door" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 transition">Abrir</button>
-                    </div>
-                </div>
+            <div class="sensor-card">
+              <div class="sensor-icon-wrapper" style="background: #ECFDF5; color: #059669;">💊</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Aspirina 100mg</div>
+                <div class="sensor-desc">Tomado hoy a las 08:00 AM</div>
+              </div>
+              <span class="badge badge-success">Completado</span>
             </div>
+          </div>
+        </section>
+
+        <!-- ================= MODO FAMILIA ================= -->
+        <section class="view-panel" id="panel-family">
+
+          <!-- FICHA DE ESTADO GENERAL -->
+          <div class="status-summary-card">
+            <div class="status-header">
+              <div class="user-profile">
+                <div class="avatar">M</div>
+                <div>
+                  <h3 style="font-size: 15px; font-weight: 800;" id="display-senior-name">Sra. Marta (82 años)</h3>
+                  <p style="font-size: 10px; color: #94A3B8;" id="display-senior-location">Peñalolén, Santiago</p>
+                </div>
+              </div>
+              <span class="badge badge-success" id="status-checkin-badge">✓ Seguro</span>
+            </div>
+
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <div class="metric-val" id="metric-activity">Activo</div>
+                <div class="metric-lbl">Movimiento</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-val" id="metric-meds">1/2</div>
+                <div class="metric-lbl">Medicinas</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-val" id="metric-temp">21°C</div>
+                <div class="metric-lbl">T. Ambiente</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SENSORES IOT -->
+          <div class="section-title">
+            <span>Red de Sensores IoT</span>
+            <span style="font-size: 10px; color: var(--primary); cursor: pointer;" id="btn-open-config">⚙️ Configurar</span>
+          </div>
+
+          <div class="sensor-list">
+            <div class="sensor-card">
+              <div class="sensor-icon-wrapper" style="background: #EFF6FF; color: #2563EB;">📡</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Radar de Caídas mmWave</div>
+                <div class="sensor-desc" id="fall-desc">Baño Principal · Normal</div>
+              </div>
+              <span class="badge badge-success" id="fall-badge">OK</span>
+            </div>
+
+            <div class="sensor-card">
+              <div class="sensor-icon-wrapper" style="background: #FEF3C7; color: #D97706;">🧊</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Uso de Refrigerador</div>
+                <div class="sensor-desc" id="fridge-desc">Última apertura: 08:30 AM</div>
+              </div>
+              <span class="badge badge-success">Rutina OK</span>
+            </div>
+
+            <div class="sensor-card">
+              <div class="sensor-icon-wrapper" style="background: #F3E8FF; color: #9333EA;">🚪</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Puerta de Acceso</div>
+                <div class="sensor-desc" id="door-desc">Cerrada · Sin anomalías</div>
+              </div>
+              <span class="badge badge-success" id="door-badge">Cerrada</span>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ================= VISTA RED DE APOYO ================= -->
+        <section class="view-panel" id="panel-network">
+          <div class="section-title">
+            <span>Red de Apoyo & Contactos</span>
+            <button class="btn-check-med" id="btn-open-add-contact" style="width: auto; padding: 5px 8px; font-size: 10px;">+ Agregar Persona</button>
+          </div>
+
+          <div class="sensor-list" id="network-container">
+            <div class="sensor-card" data-id="default-1">
+              <div class="sensor-icon-wrapper" style="background: #EFF6FF; color: #2563EB;">👩‍👧</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Carolina (Hijo/a)</div>
+                <div class="sensor-desc">+56 9 8765 4321 · Familiar Principal</div>
+              </div>
+              <div style="display: flex; gap: 4px;">
+                <button class="btn-check-med btn-call-contact" data-name="Carolina (Hijo/a)" style="padding: 6px 8px; font-size: 10px; width: auto;">📞</button>
+                <button class="btn-snooze-med btn-delete-contact" style="padding: 6px 8px; font-size: 10px; background: #FEE2E2; color: #DC2626; border: none;">🗑️</button>
+              </div>
+            </div>
+
+            <div class="sensor-card" data-id="default-2">
+              <div class="sensor-icon-wrapper" style="background: #ECFDF5; color: #059669;">🏠</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Don Pedro (Vecino)</div>
+                <div class="sensor-desc">+56 9 1234 5678 · Contacto Cercano</div>
+              </div>
+              <div style="display: flex; gap: 4px;">
+                <button class="btn-check-med btn-call-contact" data-name="Don Pedro (Vecino)" style="padding: 6px 8px; font-size: 10px; width: auto; background: #059669;">📞</button>
+                <button class="btn-snooze-med btn-delete-contact" style="padding: 6px 8px; font-size: 10px; background: #FEE2E2; color: #DC2626; border: none;">🗑️</button>
+              </div>
+            </div>
+
+            <div class="sensor-card" data-id="default-3">
+              <div class="sensor-icon-wrapper" style="background: #F3E8FF; color: #9333EA;">🩺</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Dr. Roberto Soto (Doctor)</div>
+                <div class="sensor-desc">+56 9 9988 7766 · Centro Médico</div>
+              </div>
+              <div style="display: flex; gap: 4px;">
+                <button class="btn-check-med btn-call-contact" data-name="Dr. Roberto Soto (Doctor)" style="padding: 6px 8px; font-size: 10px; width: auto; background: #9333EA;">📞</button>
+                <button class="btn-snooze-med btn-delete-contact" style="padding: 6px 8px; font-size: 10px; background: #FEE2E2; color: #DC2626; border: none;">🗑️</button>
+              </div>
+            </div>
+
+            <div class="sensor-card" data-id="default-4">
+              <div class="sensor-icon-wrapper" style="background: #FEF3C7; color: #D97706;">🧑‍⚕️</div>
+              <div class="sensor-info">
+                <div class="sensor-title">Ana María (Cuidador)</div>
+                <div class="sensor-desc">+56 9 4433 2211 · Turno Mañana</div>
+              </div>
+              <div style="display: flex; gap: 4px;">
+                <button class="btn-check-med btn-call-contact" data-name="Ana María (Cuidador)" style="padding: 6px 8px; font-size: 10px; width: auto; background: #D97706;">📞</button>
+                <button class="btn-snooze-med btn-delete-contact" style="padding: 6px 8px; font-size: 10px; background: #FEE2E2; color: #DC2626; border: none;">🗑️</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- BARRA DE NAVEGACIÓN INFERIOR DINÁMICA -->
+      <nav class="nav-bar" id="main-nav-bar">
+        <!-- Se llena con JS -->
+      </nav>
+
+      <!-- MODAL TELEFÓNICO -->
+      <div class="modal-overlay" id="modal-call">
+        <div class="modal-card">
+          <div class="call-avatar">📞</div>
+          <h3 style="font-size: 17px; color: var(--text-main);" id="call-target-name">Red Familiar (SOS)</h3>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Conectando llamada prioritaria...</p>
+          <button class="btn-end-call" id="btn-end-call">Finalizar Llamada</button>
         </div>
+      </div>
 
-    </main>
-
-    <!-- Senior Configuration Modal -->
-    <div id="senior-config-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-100 dark:border-slate-800 animate-in fade-in zoom-in duration-200">
-            <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Configurar Perfil Senior</h3>
-            <p class="text-slate-500 dark:text-slate-400 text-sm mb-4">Actualiza el nombre, edad y ubicación principal del familiar senior.</p>
-            
-            <div class="space-y-4 mb-6">
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Nombre y Apellido</label>
-                    <input type="text" id="modal-senior-name-input" placeholder="Ej. Abuelo Juan" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white font-medium focus:ring-2 focus:ring-teal-500 outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Edad</label>
-                    <input type="text" id="modal-senior-age-input" placeholder="Ej. 72 años" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white font-medium focus:ring-2 focus:ring-teal-500 outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Ubicación / Residencia</label>
-                    <input type="text" id="modal-senior-location-input" placeholder="Ej. Casa Principal o Residencia Las Flores" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white font-medium focus:ring-2 focus:ring-teal-500 outline-none">
-                </div>
+      <!-- MODAL CONFIGURACIÓN RESIDENTE -->
+      <div class="modal-overlay" id="modal-config">
+        <div class="modal-card">
+          <h3 style="font-size: 15px; margin-bottom: 10px; text-align: left;">Configurar Adulto Mayor</h3>
+          <form class="config-form" id="form-config">
+            <div class="form-group">
+              <label>Nombre del Residente</label>
+              <input type="text" id="cfg-name" value="Sra. Marta">
             </div>
-
-            <div class="flex space-x-3">
-                <button onclick="closeSeniorConfigModal()" class="flex-1 py-3 px-4 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold rounded-xl transition">Cancelar</button>
-                <button onclick="saveSeniorConfigModal()" class="flex-1 py-3 px-4 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-lg shadow-teal-600/30 transition">Guardar</button>
+            <div class="form-group">
+              <label>Edad</label>
+              <input type="number" id="cfg-age" value="82">
             </div>
+            <div class="form-group">
+              <label>Comuna / Ubicación</label>
+              <input type="text" id="cfg-location" value="Peñalolén, Santiago">
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 10px;">
+              <button type="submit" class="btn-check-med" style="flex: 1;">Guardar</button>
+              <button type="button" class="btn-check-med" id="btn-close-config" style="flex: 1; background: #64748B;">Cancelar</button>
+            </div>
+          </form>
         </div>
+      </div>
+
+      <!-- MODAL AGREGAR MEDICAMENTO -->
+      <div class="modal-overlay" id="modal-add-med">
+        <div class="modal-card">
+          <h3 style="font-size: 15px; margin-bottom: 10px; text-align: left;">Nuevo Medicamento</h3>
+          <form class="config-form" id="form-add-med">
+            <div class="form-group">
+              <label>Nombre y Dosis</label>
+              <input type="text" id="new-med-name" placeholder="Ej: Paracetamol 500mg" required>
+            </div>
+            <div class="form-group">
+              <label>Hora de Toma</label>
+              <input type="text" id="new-med-time" placeholder="Ej: 04:00 PM" required>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 10px;">
+              <button type="submit" class="btn-check-med" style="flex: 1;">Agregar</button>
+              <button type="button" class="btn-check-med" id="btn-close-add-med" style="flex: 1; background: #64748B;">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- MODAL AGREGAR CONTACTO A RED -->
+      <div class="modal-overlay" id="modal-add-contact">
+        <div class="modal-card">
+          <h3 style="font-size: 15px; margin-bottom: 10px; text-align: left;">Agregar Persona a la Red</h3>
+          <form class="config-form" id="form-add-contact">
+            <div class="form-group">
+              <label>Tipo de Vínculo</label>
+              <select id="contact-role" required>
+                <option value="Hijo/a">Hijo/a</option>
+                <option value="Doctor">Doctor</option>
+                <option value="Cuidador">Cuidador</option>
+                <option value="Vecino">Vecino</option>
+                <option value="Interesado">Interesado</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Nombre</label>
+              <input type="text" id="contact-name" placeholder="Ej: Juan" required>
+            </div>
+            <div class="form-group">
+              <label>Apellido</label>
+              <input type="text" id="contact-lastname" placeholder="Ej: Pérez" required>
+            </div>
+            <div class="form-group">
+              <label>Número de Teléfono</label>
+              <input type="text" id="contact-phone" placeholder="Ej: +56 9 1122 3344" required>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 10px;">
+              <button type="submit" class="btn-check-med" style="flex: 1;">Guardar</button>
+              <button type="button" class="btn-check-med" id="btn-close-add-contact" style="flex: 1; background: #64748B;">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
     </div>
 
-    <!-- SOS Active Emergency Overlay -->
-    <div id="sos-overlay" class="fixed inset-0 bg-rose-950/90 backdrop-blur-xl z-50 flex items-center justify-center hidden p-4">
-        <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 max-w-md w-full shadow-2xl border-4 border-rose-500 text-center">
-            <div class="w-20 h-20 bg-rose-100 dark:bg-rose-900/40 rounded-full flex items-center justify-center mx-auto mb-4 text-rose-600 animate-ping">
-                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            </div>
-            <h2 class="text-3xl font-black text-rose-600 mb-2">¡ALERTA SOS ACTIVADA!</h2>
-            <p class="text-slate-600 dark:text-slate-300 text-sm mb-6">Transmitiendo ubicación y avisando a los contactos de emergencia en <span id="sos-countdown" class="font-bold text-rose-600 text-lg">5</span> segundos...</p>
-            
-            <button onclick="cancelSOS()" class="w-full py-4 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-800 dark:text-white font-bold rounded-2xl shadow-md transition text-base">Cancelar Emergencia</button>
+    <!-- PANEL FLOTANTE - SIMULADOR IOT -->
+    <div class="iot-simulator">
+      <div class="sim-header">
+        <div class="sim-title">
+          <span>⚡ Simulador IoT</span>
         </div>
+        <div class="sim-subtitle">Inyecta eventos de hardware en tiempo real a la aplicación.</div>
+      </div>
+
+      <div class="sim-group-title">Emergencias Prioritarias</div>
+      <div class="sim-grid">
+        <button class="btn-sim danger" id="btn-sim-sos">🚨 Pulsa Botón SOS</button>
+        <button class="btn-sim danger" id="btn-sim-fall">📡 Detecta Caída</button>
+      </div>
+
+      <div class="sim-group-title">Sensores de la Casa & Rutina</div>
+      <div class="sim-grid">
+        <button class="btn-sim warning" id="btn-sim-door">🚪 Puerta Abierta</button>
+        <button class="btn-sim danger" id="btn-sim-water">💧 Fuga de Agua</button>
+        <button class="btn-sim success" id="btn-sim-fridge">🧊 Abre Refrigerador</button>
+      </div>
+
+      <div class="sim-group-title">Payload JSON Transmitido</div>
+      <div class="json-preview" id="json-preview">
+// Esperando interacción del simulador...
+{
+  "status": "connected",
+  "gateway_id": "GW_HOGAR_SEGURO_001"
+}
+      </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-2xl shadow-2xl font-semibold text-sm flex items-center space-x-2">
-        <span id="toast-msg">Notificación</span>
-    </div>
+  </div>
 
-    <!-- Application Logic -->
-    <script>
-        let state = {
-            activeView: 'senior',
-            seniorName: 'Abuelo Juan',
-            seniorAge: '72 años',
-            seniorLocation: 'Casa Principal',
-            contacts: [
-                { id: 1, name: 'María (Hija)', phone: '+34600123456', relation: 'Hija' },
-                { id: 2, name: 'Carlos (Hijo)', phone: '+34600654321', relation: 'Hijo' }
-            ],
-            medications: [
-                { id: 1, name: 'Paracetamol 500mg', time: '09:00', taken: false },
-                { id: 2, name: 'Omeprazol 20mg', time: '10:00', taken: true }
-            ],
-            iotGasActive: false,
-            iotDoorOpen: false,
-            sosActive: false,
-            sosCountdown: 5,
-            sosTimer: null
-        };
+  <!-- SCRIPT DE FUNCIONALIDAD -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
 
-        function initApp() {
-            const saved = localStorage.getItem('hogar_seguro_60_state');
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved);
-                    state = { ...state, ...parsed };
-                } catch(e) {
-                    console.error('Error loading state', e);
-                }
-            }
-            renderAll();
+      // CARGAR DATOS PERSISTENTES
+      let savedData = JSON.parse(localStorage.getItem('hogarSeguroConfig')) || {
+        seniorName: "Sra. Marta",
+        age: 82,
+        location: "Peñalolén, Santiago"
+      };
+
+      document.getElementById('display-senior-name').innerText = `${savedData.seniorName} (${savedData.age} años)`;
+      document.getElementById('display-senior-location').innerText = savedData.location;
+      document.getElementById('cfg-name').value = savedData.seniorName;
+      document.getElementById('cfg-age').value = savedData.age;
+      document.getElementById('cfg-location').value = savedData.location;
+
+      // NAVEGACIÓN ENTRE PANELES
+      const btnRoleSenior = document.getElementById('btn-role-senior');
+      const btnRoleFamily = document.getElementById('btn-role-family');
+      const panelSenior = document.getElementById('panel-senior');
+      const panelMedications = document.getElementById('panel-medications');
+      const panelFamily = document.getElementById('panel-family');
+      const panelNetwork = document.getElementById('panel-network');
+      const navBar = document.getElementById('main-nav-bar');
+
+      function switchPanel(targetPanel) {
+        panelSenior.classList.remove('active');
+        panelMedications.classList.remove('active');
+        panelFamily.classList.remove('active');
+        panelNetwork.classList.remove('active');
+        targetPanel.classList.add('active');
+      }
+
+      // RENDERIZAR BARRA INFERIOR SEGÚN EL ROL
+      function renderNavBar(role) {
+        if (role === 'senior') {
+          navBar.innerHTML = `
+            <button class="nav-item active" id="nav-btn-home" style="width: 100%;"><icon>🏠</icon>Inicio</button>
+          `;
+          document.getElementById('nav-btn-home').addEventListener('click', (e) => { setActiveNav(e.currentTarget); switchPanel(panelSenior); });
+        } else {
+          navBar.innerHTML = `
+            <button class="nav-item active" id="nav-fam-home"><icon>📊</icon>Inicio</button>
+            <button class="nav-item" id="nav-fam-meds"><icon>💊</icon>Medicamentos</button>
+            <button class="nav-item" id="nav-fam-network"><icon>👥</icon>Red</button>
+          `;
+
+          document.getElementById('nav-fam-home').addEventListener('click', (e) => { setActiveNav(e.currentTarget); switchPanel(panelFamily); });
+          document.getElementById('nav-fam-meds').addEventListener('click', (e) => { setActiveNav(e.currentTarget); switchPanel(panelMedications); });
+          document.getElementById('nav-fam-network').addEventListener('click', (e) => { setActiveNav(e.currentTarget); switchPanel(panelNetwork); });
         }
+      }
 
-        function saveState() {
-            localStorage.setItem('hogar_seguro_60_state', JSON.stringify(state));
+      function setActiveNav(btn) {
+        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+
+      // Selector de rol superior (Senior / Familia)
+      btnRoleSenior.addEventListener('click', () => {
+        btnRoleSenior.classList.add('active');
+        btnRoleFamily.classList.remove('active');
+        renderNavBar('senior');
+        switchPanel(panelSenior);
+      });
+
+      btnRoleFamily.addEventListener('click', () => {
+        btnRoleFamily.classList.add('active');
+        btnRoleSenior.classList.remove('active');
+        renderNavBar('family');
+        switchPanel(panelFamily);
+      });
+
+      // Inicializar barra por defecto en Modo Senior
+      renderNavBar('senior');
+
+      // ACCIONES DE MEDICAMENTOS (EN PRIMERA PÁGINA)
+      const btnTakeMed = document.getElementById('btn-take-med');
+      const btnSnoozeMed = document.getElementById('btn-snooze-med');
+      const nextDoseTime = document.getElementById('next-dose-time');
+
+      btnTakeMed.addEventListener('click', () => {
+        btnTakeMed.innerText = "✓ Medicamento Tomado";
+        btnTakeMed.style.background = "#10B981";
+        document.getElementById('metric-meds').innerText = "2/2";
+        alert('¡Registrado! Notificación enviada a los familiares y al cuidador: "Losartán tomado a tiempo".');
+      });
+
+      btnSnoozeMed.addEventListener('click', () => {
+        nextDoseTime.innerText = "12:15 PM";
+        alert('Recordatorio pospuesto 15 minutos. Se ha enviado un aviso de retraso preventivo al cuidador y familiares.');
+      });
+
+      // MODAL AGREGAR MEDICAMENTO
+      const modalAddMed = document.getElementById('modal-add-med');
+      document.getElementById('btn-open-add-med').addEventListener('click', () => modalAddMed.classList.add('active'));
+      document.getElementById('btn-close-add-med').addEventListener('click', () => modalAddMed.classList.remove('active'));
+
+      document.getElementById('form-add-med').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const medName = document.getElementById('new-med-name').value;
+        const medTime = document.getElementById('new-med-time').value;
+
+        const container = document.getElementById('medicaments-container');
+        const newCard = document.createElement('div');
+        newCard.className = 'sensor-card';
+        newCard.innerHTML = `
+          <div class="sensor-icon-wrapper" style="background: #EFF6FF; color: #2563EB;">💊</div>
+          <div class="sensor-info">
+            <div class="sensor-title">${medName}</div>
+            <div class="sensor-desc">Próxima toma: ${medTime}</div>
+          </div>
+          <span class="badge badge-warning">Pendiente</span>
+        `;
+        container.appendChild(newCard);
+
+        modalAddMed.classList.remove('active');
+        document.getElementById('form-add-med').reset();
+        alert('¡Medicamento agregado exitosamente a la lista!');
+      });
+
+      // MODAL AGREGAR CONTACTO A RED
+      const modalAddContact = document.getElementById('modal-add-contact');
+      document.getElementById('btn-open-add-contact').addEventListener('click', () => modalAddContact.classList.add('active'));
+      document.getElementById('btn-close-add-contact').addEventListener('click', () => modalAddContact.classList.remove('active'));
+
+      document.getElementById('form-add-contact').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const role = document.getElementById('contact-role').value;
+        const name = document.getElementById('contact-name').value;
+        const lastname = document.getElementById('contact-lastname').value;
+        const phone = document.getElementById('contact-phone').value;
+
+        let icon = "👤";
+        let iconColor = "#2563EB";
+        let iconBg = "#EFF6FF";
+
+        if (role === 'Hijo/a') { icon = "👩‍👧"; iconBg = "#EFF6FF"; iconColor = "#2563EB"; }
+        else if (role === 'Doctor') { icon = "🩺"; iconBg = "#F3E8FF"; iconColor = "#9333EA"; }
+        else if (role === 'Cuidador') { icon = "🧑‍⚕️"; iconBg = "#FEF3C7"; iconColor = "#D97706"; }
+        else if (role === 'Vecino') { icon = "🏠"; iconBg = "#ECFDF5"; iconColor = "#059669"; }
+        else if (role === 'Interesado') { icon = "🤝"; iconBg = "#F1F5F9"; iconColor = "#475569"; }
+
+        const container = document.getElementById('network-container');
+        const newCard = document.createElement('div');
+        newCard.className = 'sensor-card';
+        const fullName = `${name} ${lastname} (${role})`;
+        
+        newCard.innerHTML = `
+          <div class="sensor-icon-wrapper" style="background: ${iconBg}; color: ${iconColor};">${icon}</div>
+          <div class="sensor-info">
+            <div class="sensor-title">${name} ${lastname}</div>
+            <div class="sensor-desc">${phone} · ${role}</div>
+          </div>
+          <div style="display: flex; gap: 4px;">
+            <button class="btn-check-med btn-call-contact" data-name="${fullName}" style="padding: 6px 8px; font-size: 10px; width: auto; background: ${iconColor};">📞</button>
+            <button class="btn-snooze-med btn-delete-contact" style="padding: 6px 8px; font-size: 10px; background: #FEE2E2; color: #DC2626; border: none;">🗑️️</button>
+          </div>
+        `;
+        container.appendChild(newCard);
+
+        modalAddContact.classList.remove('active');
+        document.getElementById('form-add-contact').reset();
+        alert('¡Persona agregada exitosamente a la red de apoyo!');
+      });
+
+      // ELIMINAR CONTACTO DE LA RED (Delegación de eventos)
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.btn-delete-contact')) {
+          const card = e.target.closest('.sensor-card');
+          if (confirm('¿Estás seguro de eliminar este contacto de la red?')) {
+            card.remove();
+          }
         }
+      });
 
-        function renderAll() {
-            renderView();
-            renderSeniorProfile();
-            renderContacts();
-            renderMedications();
-            renderIoTStatus();
+      // BOTÓN ESTOY BIEN
+      document.getElementById('btn-senior-status').addEventListener('click', () => {
+        document.getElementById('status-checkin-badge').innerText = "✓ Seguro (Reportado)";
+        document.getElementById('status-checkin-badge').className = "badge badge-success";
+        alert('¡Reporte enviado! La familia y el cuidador han sido notificados de que te encuentras bien.');
+      });
+
+      // CONFIGURACIÓN (LocalStorage)
+      const modalConfig = document.getElementById('modal-config');
+      document.getElementById('btn-open-config').addEventListener('click', () => modalConfig.classList.add('active'));
+      document.getElementById('btn-close-config').addEventListener('click', () => modalConfig.classList.remove('active'));
+
+      document.getElementById('form-config').addEventListener('submit', (e) => {
+        e.preventDefault();
+        savedData.seniorName = document.getElementById('cfg-name').value;
+        savedData.age = document.getElementById('cfg-age').value;
+        savedData.location = document.getElementById('cfg-location').value;
+
+        localStorage.setItem('hogarSeguroConfig', JSON.stringify(savedData));
+
+        document.getElementById('display-senior-name').innerText = `${savedData.seniorName} (${savedData.age} años)`;
+        document.getElementById('display-senior-location').innerText = savedData.location;
+        
+        modalConfig.classList.remove('active');
+        alert('¡Datos guardados exitosamente!');
+      });
+
+      // SIMULADOR Y LLAMADAS
+      const modalCall = document.getElementById('modal-call');
+      function openCallModal(targetName) {
+        document.getElementById('call-target-name').innerText = targetName;
+        modalCall.classList.add('active');
+      }
+
+      document.getElementById('btn-end-call')?.addEventListener('click', () => modalCall.classList.remove('active'));
+      document.getElementById('btn-senior-sos')?.addEventListener('click', () => openCallModal('Red Familiar (SOS)'));
+
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.btn-call-contact')) {
+          const btn = e.target.closest('.btn-call-contact');
+          openCallModal(btn.getAttribute('data-name'));
         }
+      });
 
-        function renderSeniorProfile() {
-            const nameEl = document.getElementById('senior-display-name');
-            const ageEl = document.getElementById('senior-display-age');
-            const locEl = document.getElementById('senior-display-location');
-
-            if (nameEl) nameEl.textContent = state.seniorName || 'Abuelo/a';
-            if (ageEl) ageEl.textContent = state.seniorAge || '72 años';
-            if (locEl) locEl.textContent = state.seniorLocation || 'Casa Principal';
-        }
-
-        function openSeniorConfigModal() {
-            const nameInput = document.getElementById('modal-senior-name-input');
-            const ageInput = document.getElementById('modal-senior-age-input');
-            const locInput = document.getElementById('modal-senior-location-input');
-
-            if (nameInput) nameInput.value = state.seniorName || '';
-            if (ageInput) ageInput.value = state.seniorAge || '';
-            if (locInput) locInput.value = state.seniorLocation || '';
-
-            document.getElementById('senior-config-modal').classList.remove('hidden');
-        }
-
-        function closeSeniorConfigModal() {
-            document.getElementById('senior-config-modal').classList.add('hidden');
-        }
-
-        function saveSeniorConfigModal() {
-            const nameInput = document.getElementById('modal-senior-name-input');
-            const ageInput = document.getElementById('modal-senior-age-input');
-            const locInput = document.getElementById('modal-senior-location-input');
-
-            if (nameInput && ageInput && locInput) {
-                const nameVal = nameInput.value.trim();
-                const ageVal = ageInput.value.trim();
-                const locVal = locInput.value.trim();
-
-                if (nameVal) state.seniorName = nameVal;
-                if (ageVal) state.seniorAge = ageVal;
-                if (locVal) state.seniorLocation = locVal;
-
-                saveState();
-                renderSeniorProfile();
-                showToast('Perfil Senior actualizado correctamente');
-            }
-            closeSeniorConfigModal();
-        }
-
-        function switchView(viewName) {
-            state.activeView = viewName;
-            renderView();
-        }
-
-        function renderView() {
-            document.querySelectorAll('.view-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`view-${state.activeView}`).classList.remove('hidden');
-
-            const tabSenior = document.getElementById('tab-senior');
-            const tabFamily = document.getElementById('tab-family');
-
-            if (state.activeView === 'senior') {
-                tabSenior.className = "px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2 bg-white dark:bg-slate-700 text-teal-600 dark:text-teal-400 shadow-sm";
-                tabFamily.className = "px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white";
-            } else {
-                tabFamily.className = "px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2 bg-white dark:bg-slate-700 text-teal-600 dark:text-teal-400 shadow-sm";
-                tabSenior.className = "px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white";
-            }
-        }
-
-        function renderMedications() {
-            const list = document.getElementById('senior-meds-list');
-            if (!list) return;
-            list.innerHTML = '';
-            state.medications.forEach(med => {
-                const div = document.createElement('div');
-                div.className = `p-4 rounded-2xl flex items-center justify-between border transition ${med.taken ? 'bg-emerald-50/50 border-emerald-100 dark:bg-emerald-950/20 dark:border-emerald-900/50 opacity-75' : 'bg-slate-50 border-slate-100 dark:bg-slate-800/50 dark:border-slate-700'}`;
-                div.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl ${med.taken ? 'bg-emerald-500 text-white' : 'bg-teal-100 text-teal-700 dark:bg-teal-900/50 dark:text-teal-300'} flex items-center justify-center font-bold text-sm">
-                            ${med.taken ? '✓' : '💊'}
-                        </div>
-                        <div>
-                            <p class="font-bold text-slate-800 dark:text-white text-sm ${med.taken ? 'line-through text-slate-400' : ''}">${med.name}</p>
-                            <p class="text-xs text-slate-500">Hora recomendada: ${med.time}</p>
-                        </div>
-                    </div>
-                    <button onclick="toggleMedication(${med.id})" class="px-4 py-2 rounded-xl text-xs font-bold transition ${med.taken ? 'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-300' : 'bg-teal-600 text-white shadow-md shadow-teal-600/30'}">
-                        ${med.taken ? 'Desmarcar' : 'Tomar'}
-                    </button>
-                `;
-                list.appendChild(div);
-            });
-        }
-
-        function toggleMedication(id) {
-            state.medications = state.medications.map(m => m.id === id ? { ...m, taken: !m.taken } : m);
-            saveState();
-            renderMedications();
-            showToast('Estado de medicamento actualizado');
-        }
-
-        function renderContacts() {
-            const list = document.getElementById('contact-list');
-            if (!list) return;
-            list.innerHTML = '';
-            state.contacts.forEach(c => {
-                const div = document.createElement('div');
-                div.className = "p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 flex items-center justify-between";
-                div.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-full bg-teal-100 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300 flex items-center justify-center font-bold">
-                            ${c.name.charAt(0)}
-                        </div>
-                        <div>
-                            <p class="font-bold text-slate-800 dark:text-white text-sm">${c.name} <span class="text-xs font-normal text-slate-500">(${c.relation})</span></p>
-                            <p class="text-xs text-slate-500">${c.phone}</p>
-                        </div>
-                    </div>
-                    <button onclick="deleteContact(${c.id})" class="text-rose-500 hover:text-rose-700 p-2 rounded-lg transition" title="Eliminar contacto">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    </button>
-                `;
-                list.appendChild(div);
-            });
-        }
-
-        function addContact() {
-            const nameInput = document.getElementById('new-contact-name');
-            const phoneInput = document.getElementById('new-contact-phone');
-            const relationInput = document.getElementById('new-contact-relation');
-
-            if (!nameInput.value || !phoneInput.value) {
-                showToast('Por favor completa nombre y teléfono');
-                return;
-            }
-
-            const newC = {
-                id: Date.now(),
-                name: nameInput.value,
-                phone: phoneInput.value,
-                relation: relationInput.value || 'Familiar'
-            };
-
-            state.contacts.push(newC);
-            saveState();
-            renderContacts();
-
-            nameInput.value = '';
-            phoneInput.value = '';
-            relationInput.value = '';
-            showToast('Contacto añadido exitosamente');
-        }
-
-        function deleteContact(id) {
-            state.contacts = state.contacts.filter(c => c.id !== id);
-            saveState();
-            renderContacts();
-            showToast('Contacto eliminado');
-        }
-
-        function toggleIoTSimulator(type) {
-            if (type === 'gas') {
-                state.iotGasActive = !state.iotGasActive;
-            } else if (type === 'door') {
-                state.iotDoorOpen = !state.iotDoorOpen;
-            }
-            saveState();
-            renderIoTStatus();
-            showToast('Simulador IoT actualizado');
-        }
-
-        function renderIoTStatus() {
-            const gasStatus = document.getElementById('iot-gas-status');
-            const doorStatus = document.getElementById('iot-door-status');
-            const btnGas = document.getElementById('btn-sim-gas');
-            const btnDoor = document.getElementById('btn-sim-door');
-
-            if (gasStatus && btnGas) {
-                if (state.iotGasActive) {
-                    gasStatus.textContent = '¡ALERTA GAS/CALOR!';
-                    gasStatus.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400 animate-pulse';
-                    btnGas.textContent = 'Desactivar';
-                    btnGas.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 text-white transition shadow-md';
-                } else {
-                    gasStatus.textContent = 'Seguro (Apagado)';
-                    gasStatus.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400';
-                    btnGas.textContent = 'Activar';
-                    btnGas.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 transition';
-                }
-            }
-
-            if (doorStatus && btnDoor) {
-                if (state.iotDoorOpen) {
-                    doorStatus.textContent = 'Abierta (Alerta)';
-                    doorStatus.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 animate-pulse';
-                    btnDoor.textContent = 'Cerrar';
-                    btnDoor.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-amber-600 text-white transition shadow-md';
-                } else {
-                    doorStatus.textContent = 'Cerrada';
-                    doorStatus.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400';
-                    btnDoor.textContent = 'Abrir';
-                    btnDoor.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 transition';
-                }
-            }
-        }
-
-        function triggerSOS() {
-            state.sosActive = true;
-            state.sosCountdown = 5;
-            document.getElementById('sos-overlay').classList.remove('hidden');
-            
-            clearInterval(state.sosTimer);
-            state.sosTimer = setInterval(() => {
-                state.sosCountdown--;
-                const countEl = document.getElementById('sos-countdown');
-                if (countEl) countEl.textContent = state.sosCountdown;
-                
-                if (state.sosCountdown <= 0) {
-                    clearInterval(state.sosTimer);
-                    document.getElementById('sos-overlay').classList.add('hidden');
-                    showToast('¡Alerta SOS enviada con éxito a todos los contactos!');
-                    state.sosActive = false;
-                }
-            }, 1000);
-        }
-
-        function cancelSOS() {
-            clearInterval(state.sosTimer);
-            state.sosActive = false;
-            document.getElementById('sos-overlay').classList.add('hidden');
-            showToast('Alerta SOS cancelada');
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            const msgEl = document.getElementById('toast-msg');
-            if (!toast || !msgEl) return;
-            msgEl.textContent = msg;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
-        }
-
-        window.onload = function() {
-            initApp();
-        };
-    </script>
+    });
+  </script>
 </body>
 </html>
